@@ -1,8 +1,11 @@
+import Apriori.Apriori;
+import Tools.Dataset;
+
 /**
  * Skeleton class for the project 1 of the LINGI2364 course.
  * Use this as main class of your jar file.
  *
- * This class and the Dataset classes are given to you as a skeleton for your implementation of the Apriori and Depth
+ * This class and the Tools.Dataset classes are given to you as a skeleton for your implementation of the Apriori and Depth
  * First Search algorithms. You are not obligated to use them and are free to write any class or method as long as the
  * following requirements are respected:
  *
@@ -50,7 +53,9 @@ public class FrequentItemsetMiner{
      * @param minFrequency the minimum frequency for an itemset to be considered as frequent.
      */
     public static void apriori(String filepath, double minFrequency){
-        //TODO: implementation of the apriori algorithm
+        Dataset dataset = new Dataset( filepath );
+        Apriori apriori = new Apriori( dataset, minFrequency );
+        System.out.print( apriori.starter() );
     }
 
     /**
