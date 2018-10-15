@@ -44,12 +44,5 @@ public class HashTree {
         this.frequency += 1;
     }
 
-    public String toString ( int[] path) {
-        String toPrint = "";
-        for( Integer element :path){
-            toPrint= toPrint.concat( element.toString() );
-        }
-        return toPrint.concat( "("+String.format("%.2f", frequency) +")" + "\n");
-    }
 
 }

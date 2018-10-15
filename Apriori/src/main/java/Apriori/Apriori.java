@@ -17,9 +17,10 @@ public class Apriori {
         this.root = new HashTree();
     }
     public String starter(){
-        createFirstLevel();
+        String toPrint = createFirstLevel();
         int [] path = {};
-        return starter( root, path);
+        toPrint = toPrint.concat( starter( root, path) ) ;
+        return toPrint;
 
     }
 
@@ -30,12 +31,14 @@ public class Apriori {
         for ( Integer key : keys){
             keysToExpand.remove( key );
             ArrayList<Candidate> candidates = generateCandidates( father, key, keysToExpand, combine( path, key ));
-            computeSupport(candidates, key, father);
-            for( Map.Entry<Integer, HashTree> elected: father.getHashTree().entrySet()){
-                toReturn = toReturn.concat( starter( elected.getValue(), combine( path, elected.getKey() )) );
+            toReturn = toReturn.concat( computeSupport(candidates, key, father.getHashTree().get( key ), path) );
+        }
+        if(father.getHashTree().entrySet().size() > 1 ) {
+            for ( Map.Entry < Integer, HashTree > elected : father.getHashTree().entrySet() ){
+                toReturn = toReturn.concat( starter( elected.getValue(), combine( path, elected.getKey() ) ) );
             }
         }
-        return toReturn.concat( father.toString( path ));
+        return toReturn;
 
     }
 
@@ -43,12 +46,13 @@ public class Apriori {
                                                 int[] path){
         ArrayList<Candidate> candidates = new ArrayList <>();
         for(int nextKey : keyToExpand){
-            candidates.add( new Candidate(combine(path, nextKey), key ));
+            candidates.add( new Candidate(combine(path, nextKey), nextKey ));
         }
         return candidates;
     }
 
-    private void computeSupport (ArrayList<Candidate> candidates , Integer key, HashTree father){
+    private String computeSupport (ArrayList<Candidate> candidates , Integer key, HashTree father, int[] path){
+        String toPrint = "";
         for( int[] transaction :dataset.transactions()){
             for( Candidate candidate: candidates ){
                 if( candidate.isContained( transaction )){
@@ -60,20 +64,26 @@ public class Apriori {
             double frequency  = candidate.getSupport() / this.transactionNumber;
             if( frequency >= this.minFrequency ){
                 father.addElement( candidate.getKey(), frequency);
+                toPrint = toPrint.concat( printElement( path, key, candidate.getKey(), frequency ) );
             }
         }
+        return toPrint;
     }
 
-    private void createFirstLevel(){
+    private String createFirstLevel(){
         double frequency;
+        String toPrint = "";
+        int [] emptyList = {};
         // First level of the tree
         for ( Map.Entry<Integer, Double> entry : dataset.getItems().entrySet()){
             frequency = entry.getValue() / transactionNumber;
             if( frequency >= minFrequency){
                 root.addElement(entry.getKey(),frequency);
+                toPrint = toPrint.concat( printElement(entry.getKey(), frequency ) );
             }
 
         }
+        return toPrint;
     }
 
     private static int[] combine(int[] list, int element) {
@@ -82,6 +92,19 @@ public class Apriori {
         System.arraycopy( list, 0, result, 0, list.length );
         result[result.length-1] = element;
         return result;
+    }
+    private String printElement(int[] path, int fatherKey, int candidateKey, double frequency){
+        String toPrint = "[";
+        for( Integer element :path){
+            toPrint= toPrint.concat( element.toString() ).concat(", ");
+        }
+        toPrint = toPrint.concat( fatherKey + ", "+candidateKey+"]" );
+        return toPrint.concat( "  ("+String.format("%.3f", frequency) +")" + "\n");
+    }
+
+    private String printElement(int candidateKey, double frequency){
+        String toPrint = "["+ candidateKey +"]" ;
+        return toPrint.concat( "  ("+String.format("%.3f", frequency) +")" + "\n");
     }
 
 }
