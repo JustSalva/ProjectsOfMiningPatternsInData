@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 /**
- * Utility class to manage a dataset stored in a external file.
+ * Utilities class to manage a dataset stored in a external file.
  *
  * @author Charles Thomas (charles.thomas@uclouvain.be)
  */
@@ -30,12 +30,12 @@ public class Dataset{
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             while (reader.ready()) {
                 String line = reader.readLine();
-                if(line.matches("^\\s*$")) continue; //Skipping blank lines
-                int[] transaction = Stream.of(line.trim().split(" ")).mapToInt(Integer::parseInt).toArray();
-                this.transactions.add(transaction);
-                for(int i: transaction)
-                    if(!itemsFound.containsKey( i )) itemsFound.put( i, 1.0 );
-                    else    itemsFound.replace( i, itemsFound.get(i) + 1.0 );
+                if ( line.matches( "^\\s*$" ) ) continue; //Skipping blank lines
+                int[] transaction = Stream.of( line.trim().split( " " ) ).mapToInt( Integer::parseInt ).toArray();
+                this.transactions.add( transaction );
+                for ( int i : transaction )
+                    if ( !itemsFound.containsKey( i ) ) itemsFound.put( i, 1.0 );
+                    else itemsFound.replace( i, itemsFound.get( i ) + 1.0 );
             }
             reader.close();
         }

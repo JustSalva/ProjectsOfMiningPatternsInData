@@ -1,8 +1,10 @@
 package Apriori;
 
 import Tools.Dataset;
-
 import java.util.*;
+
+import static Tools.Utilities.*;
+
 
 public class Apriori {
     private Dataset dataset;
@@ -86,25 +88,7 @@ public class Apriori {
         return toPrint;
     }
 
-    private static int[] combine(int[] list, int element) {
-        int length = list.length + 1;
-        int[] result = new int[ length ];
-        System.arraycopy( list, 0, result, 0, list.length );
-        result[result.length-1] = element;
-        return result;
-    }
-    private String printElement(int[] path, int fatherKey, int candidateKey, double frequency){
-        String toPrint = "[";
-        for( Integer element :path){
-            toPrint= toPrint.concat( element.toString() ).concat(", ");
-        }
-        toPrint = toPrint.concat( fatherKey + ", "+candidateKey+"]" );
-        return toPrint.concat( "  ("+String.format("%.3f", frequency) +")" + "\n");
-    }
 
-    private String printElement(int candidateKey, double frequency){
-        String toPrint = "["+ candidateKey +"]" ;
-        return toPrint.concat( "  ("+String.format("%.3f", frequency) +")" + "\n");
-    }
+
 
 }

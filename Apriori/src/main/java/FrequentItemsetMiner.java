@@ -1,5 +1,7 @@
 import Apriori.Apriori;
+import ECLAT.ECLAT;
 import Tools.Dataset;
+import Tools.ECLATDataset;
 
 /**
  * Skeleton class for the project 1 of the LINGI2364 course.
@@ -59,11 +61,14 @@ public class FrequentItemsetMiner{
     }
 
     /**
+     * ECLAT
      * Prints all the frequent (i.e. having a frequency >= minFrequency) itemsets in filepath.
      * @param filepath The path to a valid dataset file.
      * @param minFrequency the minimum frequency for an itemset to be considered as frequent.
      */
     public static void alternativeMiner(String filepath, double minFrequency){
-        //TODO: either second implementation of the apriori algorithm or implementation of the depth first search algorithm
+        ECLATDataset dataset = new ECLATDataset( filepath );
+        ECLAT eclat = new ECLAT( dataset.getTransactionNumber(), minFrequency );
+        System.out.println( eclat.starter(dataset.getVerticalRepresentation()) );
     }
 }
