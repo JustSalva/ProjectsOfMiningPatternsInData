@@ -21,7 +21,7 @@ public class ECLATDataset{
                 String line = reader.readLine();
                 if(line.matches("^\\s*$")) continue; //Skipping blank lines
                 int[] transaction = Stream.of(line.trim().split(" ")).mapToInt(Integer::parseInt).toArray();
-                for(int i: transaction) {
+                for(int i = 0; i < transaction.length; i++) {
                     if ( !verticalRepresentation.containsKey( transaction[ i ] ) ) {
                         ArrayList < Integer > temp = new ArrayList < Integer >();
                         verticalRepresentation.put( transaction[ i ], temp );
