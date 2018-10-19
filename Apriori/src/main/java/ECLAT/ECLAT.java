@@ -1,6 +1,5 @@
 package ECLAT;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import static Tools.Utilities.*;
@@ -8,41 +7,44 @@ import static Tools.Utilities.*;
 public class ECLAT {
     private final int numberOfTransactions;
     private double minFrequency;
+    private double frequency; //temp variable to optimize
 
     public ECLAT ( int numberOfTransactions, double minFrequency ) {
         this.numberOfTransactions = numberOfTransactions - 1;
         this.minFrequency = minFrequency;
     }
 
-    public String starter(TreeMap<Integer, ArrayList<Integer> > verticalRepresentation){
+    public String starter(TreeMap<Integer, int[] > verticalRepresentation){
         String toPrint="";
-        TreeMap<Integer, ArrayList<Integer> > verticalProjectedCopy = new TreeMap <>( verticalRepresentation );
+        TreeMap<Integer, int[] > verticalProjectedCopy = new TreeMap <>( verticalRepresentation );
+        int [] patternList;
         for ( int lastPatternElement : verticalRepresentation.keySet()){
-            double frequency = computeFrequency( verticalRepresentation.get( lastPatternElement ).size() );
+            this.frequency = computeFrequency( verticalRepresentation.get( lastPatternElement ).length);
             if( frequency >= minFrequency){
                 toPrint = toPrint.concat( printElement( lastPatternElement, frequency) );
             }
-            TreeMap<Integer, ArrayList<Integer> > projectedVertical =
+            TreeMap<Integer, int[] > projectedVertical =
                     projectDatabase(verticalProjectedCopy, lastPatternElement);
             verticalProjectedCopy.remove( lastPatternElement );
-            int [] patternList = { lastPatternElement };
+            patternList = new int[]{ lastPatternElement };
             toPrint = toPrint.concat( starter( patternList, projectedVertical) );
         }
         return toPrint;
     }
 
-    public String starter(int[] pattern, TreeMap<Integer, ArrayList<Integer> > verticalProjected){
+    public String starter(int[] pattern, TreeMap<Integer, int[] > verticalProjected){
         String toPrint="";
-        TreeMap<Integer, ArrayList<Integer> > verticalProjectedCopy = new TreeMap <>( verticalProjected );
+        TreeMap<Integer, int[] > verticalProjectedCopy = new TreeMap <>( verticalProjected );
+        int[] patternList;
         for ( int lastPatternElement : verticalProjected.keySet()){
-            double frequency = computeFrequency( verticalProjected.get( lastPatternElement ).size() );
+            this.frequency = computeFrequency( verticalProjected.get( lastPatternElement ).length );
             if( frequency >= minFrequency){
                 toPrint = toPrint.concat( printElement(pattern, lastPatternElement, frequency) );
             }
-            TreeMap<Integer, ArrayList<Integer> > projectedVertical =
+            TreeMap<Integer, int[] > projectedVertical =
                     projectDatabase(verticalProjectedCopy, lastPatternElement);
             verticalProjectedCopy.remove( lastPatternElement );
-            int [] patternList = combine( pattern, lastPatternElement);
+            patternList = combine( pattern, lastPatternElement);
             if(projectedVertical.size() > 0){
                 toPrint = toPrint.concat( starter( patternList, projectedVertical) );
             }
@@ -55,28 +57,29 @@ public class ECLAT {
         return length/numberOfTransactions;
     }
 
-    private TreeMap<Integer, ArrayList<Integer> > projectDatabase( TreeMap<Integer, ArrayList<Integer> > previousDatabase,
-                                                                   int element){
-        TreeMap<Integer, ArrayList<Integer>> projectedDatabase = new TreeMap <>();
-        TreeMap<Integer, ArrayList<Integer>> previousDatabaseCopy = new TreeMap <>(previousDatabase);
-        ArrayList<Integer> pattern = previousDatabase.get( element );
+    private TreeMap<Integer, int[] > projectDatabase( TreeMap<Integer, int[] > previousDatabase, int element){
+
+        TreeMap<Integer, int[]> projectedDatabase = new TreeMap <>();
+        TreeMap<Integer, int[]> previousDatabaseCopy = new TreeMap <>(previousDatabase);
+        int[] pattern = previousDatabase.get( element );
         previousDatabaseCopy.remove( element );
         boolean singleMatch; //match of one single item
         boolean fullMatch; //match if the entire transaction (== at least one match)
         int transactionIndex = 0;
         int patternIndex;
-        ArrayList <Integer> temp = new ArrayList <>();
-        for ( Map.Entry<Integer, ArrayList<Integer>> entry : previousDatabaseCopy.entrySet()) {
-            //if ( entry.getKey() > element ) {
-                patternIndex = 0;
-                fullMatch = false;
-                transactionIndex = 0;
-                while ( patternIndex < pattern.size() ) {
-                    transactionIndex = 0; //TODO maybe we can optimize this
-                    singleMatch = false;
+        int[] temp = null;
+        int[] transaction;
+        for ( Map.Entry<Integer, int[]> entry : previousDatabaseCopy.entrySet()) {
+            transaction = entry.getValue();
+            patternIndex = 0;
+            fullMatch = false;
+            transactionIndex = 0;
+            while ( patternIndex < pattern.length) {
+                singleMatch = false;
+                if( pattern[patternIndex] >= transaction[transactionIndex]){
 
-                    while ( transactionIndex < entry.getValue().size() ) {
-                        if ( pattern.get( patternIndex ).equals( entry.getValue().get( transactionIndex ) ) ) {
+                    while ( transactionIndex < transaction.length ) {
+                        if ( pattern[patternIndex] == ( transaction[transactionIndex] ) ) {
                             singleMatch = true;
                             transactionIndex++;
                             break;
@@ -84,16 +87,24 @@ public class ECLAT {
                         transactionIndex++;
                     }
                     if ( singleMatch ) {
-                        temp.add( pattern.get( patternIndex ) );
+                        temp = combine( temp, pattern[patternIndex] );
                         fullMatch = true;
                     }
-                    patternIndex++;
+                    else if( transactionIndex == transaction.length
+                            && pattern[patternIndex] != ( transaction[transactionIndex-1] )) {
+                        transactionIndex = 0;
+                    }
+                    if ( transactionIndex == transaction.length && pattern[patternIndex] == ( transaction[transactionIndex-1] )){
+                        break;
+                    }
                 }
-                if ( fullMatch ) {
-                    projectedDatabase.put( entry.getKey(), new ArrayList <>( temp ) );
-                    temp.clear();
-                }
-           // }
+                patternIndex++;
+            }
+            if ( fullMatch ) {
+                projectedDatabase.put( entry.getKey(), temp.clone() );
+                temp = null;
+            }
+
         }
         return projectedDatabase;
     }

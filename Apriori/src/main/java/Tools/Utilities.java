@@ -3,11 +3,16 @@ package Tools;
 public class Utilities {
 
     public static int[] combine(int[] list, int element) {
-        int length = list.length + 1;
-        int[] result = new int[ length ];
-        System.arraycopy( list, 0, result, 0, list.length );
-        result[result.length-1] = element;
-        return result;
+        if(list != null){
+            int length = list.length + 1;
+            int[] result = new int[ length ];
+            System.arraycopy( list, 0, result, 0, list.length );
+            result[result.length-1] = element;
+            return result;
+        }
+        else{
+            return new int[]{element};
+        }
     }
 
     public static String printElement(int candidateKey, double frequency){
