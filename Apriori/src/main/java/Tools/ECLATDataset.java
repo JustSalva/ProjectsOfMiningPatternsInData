@@ -13,6 +13,7 @@ public class ECLATDataset{
 
     public ECLATDataset(String filePath) {
         int transactionNumber = 1;
+        int temp[];
         verticalRepresentation = new TreeMap <>();
         // Counting items and initialising transactions and items structures
         try {
@@ -23,7 +24,7 @@ public class ECLATDataset{
                 int[] transaction = Stream.of(line.trim().split(" ")).mapToInt(Integer::parseInt).toArray();
                 for(int i = 0; i < transaction.length; i++) {
                     if ( !verticalRepresentation.containsKey( transaction[ i ] ) ) {
-                        ArrayList < Integer > temp = new ArrayList < Integer >();
+                        temp = new ArrayList <>();
                         verticalRepresentation.put( transaction[ i ], temp );
                     }
                     verticalRepresentation.get( transaction[ i ] ).add( transactionNumber );
