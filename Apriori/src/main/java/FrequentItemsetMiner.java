@@ -1,13 +1,13 @@
 import Apriori.Apriori;
 import ECLAT.ECLAT;
-import Tools.Dataset;
-import Tools.ECLATDataset;
+import Tools.AprioriDataSet;
+import Tools.ECLATDataSet;
 
 /**
  * Skeleton class for the project 1 of the LINGI2364 course.
  * Use this as main class of your jar file.
  *
- * This class and the Tools.Dataset classes are given to you as a skeleton for your implementation of the Apriori and Depth
+ * This class and the Tools.AprioriDataSet classes are given to you as a skeleton for your implementation of the Apriori and Depth
  * First Search algorithms. You are not obligated to use them and are free to write any class or method as long as the
  * following requirements are respected:
  *
@@ -55,7 +55,7 @@ public class FrequentItemsetMiner{
      * @param minFrequency the minimum frequency for an itemset to be considered as frequent.
      */
     public static void apriori(String filepath, double minFrequency){
-        Dataset dataset = new Dataset( filepath );
+        AprioriDataSet dataset = new AprioriDataSet( filepath );
         Apriori apriori = new Apriori( dataset, minFrequency );
         System.out.print( apriori.starter() );
     }
@@ -67,7 +67,7 @@ public class FrequentItemsetMiner{
      * @param minFrequency the minimum frequency for an itemset to be considered as frequent.
      */
     public static void alternativeMiner(String filepath, double minFrequency){
-        ECLATDataset dataset = new ECLATDataset( filepath );
+        ECLATDataSet dataset = new ECLATDataSet( filepath );
         ECLAT eclat = new ECLAT( dataset.getTransactionNumber(), minFrequency );
         System.out.println( eclat.starter(dataset.getVerticalRepresentation()) );
     }

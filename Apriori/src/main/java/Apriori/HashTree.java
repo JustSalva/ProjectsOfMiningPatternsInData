@@ -1,29 +1,39 @@
 package Apriori;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeMap;
 
+/**
+ * Implementation of the HashTree data structure, to contain the Apriori search tree
+ */
 public class HashTree {
+    /**
+     * HashMap containing the children nodes of this node
+     */
     private TreeMap<Integer, HashTree> treeMap;
+    /**
+     * frequency of the node
+     */
     private double frequency;
 
 
-    public HashTree () {
+    HashTree () {
         this.treeMap = new TreeMap <>();
         this.frequency = 0;
     }
 
-    public HashTree ( double frequency ) {
+    private HashTree ( double frequency ) {
         this.treeMap = new TreeMap <>();
         this.frequency = frequency;
     }
 
-    public TreeMap < Integer, HashTree > getHashTree () {
-        return treeMap;
-    }
 
-    public void addElement( int value, double frequency){
+    /**
+     * Adds an element as a children
+     * @param value key of the children
+     * @param frequency frequency of the new node
+     */
+    void addElement ( int value, double frequency ){
         if( ! treeMap.containsKey( value ) ){
             treeMap.put( value , new HashTree(frequency));
         }
@@ -32,7 +42,11 @@ public class HashTree {
         }
     }
 
-    public Set<Integer> getKeys (){
+    TreeMap < Integer, HashTree > getHashTree () {
+        return treeMap;
+    }
+
+    Set<Integer> getKeys (){
         return treeMap.keySet();
     }
 

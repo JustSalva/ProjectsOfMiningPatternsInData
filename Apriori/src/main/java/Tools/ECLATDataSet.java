@@ -5,14 +5,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
-import static Tools.Utilities.combine;
 
 
-public class ECLATDataset{
+public class ECLATDataSet {
     private final TreeMap<Integer, Set<Integer> > verticalRepresentation;
     private final int transactionNumber;
 
-    public ECLATDataset(String filePath) {
+    public ECLATDataSet ( String filePath) {
         int transactionNumber = 1;
         int temp;
         verticalRepresentation = new TreeMap <>();

@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  *
  * @author Charles Thomas (charles.thomas@uclouvain.be)
  */
-public class Dataset{
+public class AprioriDataSet {
     private final TreeMap<Integer, Double> itemsFound ; //The different items in the dataset
     private final ArrayList<int[]> transactions; //The transactions in the dataset
 
@@ -21,7 +21,7 @@ public class Dataset{
      *                 Each line corresponds to a transaction. Blank lines might be present and will be ignored.
      *                 Items in a transaction are represented by integers separated by single spaces.
      */
-    public Dataset(String filePath) {
+    public AprioriDataSet ( String filePath) {
 
         // Counting items and initialising transactions and items structures
         this.itemsFound = new TreeMap<Integer, Double>();

@@ -1,11 +1,26 @@
 package Apriori;
 
+/**
+ * Support class that represent a candidate node (= node that is potentially to be expanded)
+ */
 public class Candidate {
+
+    /**
+     * path that leads to this node
+     */
     private int[] path;
+
+    /**
+     * key value of this node
+     */
     private int key;
+
+    /**
+     *  number of occurrences of this pattern
+     */
     private Double support;
 
-    public Candidate ( int[] path, int key ) {
+    Candidate ( int[] path, int key ) {
         this.path = path;
         this.key = key;
         this.support = 0.0;
@@ -15,26 +30,26 @@ public class Candidate {
         return path;
     }
 
-    public int getKey () {
+    int getKey () {
         return key;
     }
 
-    public void incrementSupport(){
+    void incrementSupport (){
         support++;
     }
 
-    public Double getSupport () {
+    Double getSupport () {
         return support;
     }
 
-    public boolean isContained( int[] transaction){
+    boolean isContained ( int[] transaction ){
         int pathIndex = 0;
         int pathLenght = this.path.length;
-        for ( int transactionIndex = 0; transactionIndex < transaction.length; transactionIndex++){
-            if(this.path[pathIndex]==transaction[transactionIndex]){
+        for ( int aTransaction : transaction ) {
+            if ( this.path[ pathIndex ] == aTransaction ) {
                 pathIndex++;
             }
-            if(pathIndex == pathLenght){
+            if ( pathIndex == pathLenght ) {
                 return true;
             }
         }
