@@ -1,4 +1,4 @@
-\documentclass[11pt, a4paper, draft]{report}
+\documentclass[11pt, a4paper]{article}
 
 \usepackage{geometry}
  \geometry{
@@ -34,20 +34,24 @@
 	\begin{titlepage}
 		\centering
 		% logo image
-		\includegraphics{logo.png}\par\vspace{1cm}
+		\includegraphics[scale =0.8]{logo.jpg}\par\vspace{1cm}
 		% institution 
-		{\scshape\LARGE\bfseries Politecnico di Milano \par}
-		\vspace{2cm}
+		{\scshape\LARGE\bfseries Ecole Polytechnique de Louvain\par}
+		\vspace{1.5cm}
 		{\scshape\Large \par}
 		\vspace{1.5cm}
 		% title
-		{\Huge\bfseries Notes of \par}
+		{\huge\bfseries LINGI2364: Mining Patterns in Data \par}
 		\vspace{1cm}
+		{\Huge Project 1: Implementing Apriori \par}
+		\vspace{2cm}
+		{\LARGE Group 11\par}
 		% versioning
-		{\small Version 1.0 - 10/08/2018\par}
 		\vspace{1cm}
 		% author
-		{\Large\itshape Alessandra Rossaro, Matteo Salvadore\par}
+		{\Large\itshape Alessandra Rossaro (01211800), Matteo Salvadore (01731800)\par}
+		\vspace{2cm}
+		{\small Version 1.0 - 21/10/2018\par}
 
 		\vfill
 
@@ -55,16 +59,10 @@
 		{\large AY 2018-2019\par}
 	\end{titlepage}
 
-	\tableofcontents{}
-
-	\listoftodos[Notes]
-
-	\chapter{CHAPTER 1}
-	\label{ch:CHAPTER_ONE}
-		\begin{comment}
-			\input{./1-Project/group_info.tex}
-		\end{comment}
-			\todo[inline]{write something meaningful!}
-			\lipsum
+	\section{Implementations}
+		\subsection{Apriori}
+		\subsection{ECLAT}
+	\section{Performances}
+		
 
 \end{document}
