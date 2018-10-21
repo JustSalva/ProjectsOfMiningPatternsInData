@@ -1,48 +1,54 @@
 package ECLAT;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+
 import static Tools.Utilities.*;
 
 public class ECLAT {
     private final int numberOfTransactions;
     private double minFrequency;
+    private double frequency; //temp variable to optimize
+    private double minTransactionLenght;
 
     public ECLAT ( int numberOfTransactions, double minFrequency ) {
         this.numberOfTransactions = numberOfTransactions - 1;
         this.minFrequency = minFrequency;
+        this.minTransactionLenght = Math.floor( minFrequency * numberOfTransactions);
     }
 
-    public String starter(TreeMap<Integer, ArrayList<Integer> > verticalRepresentation){
+    public String starter(TreeMap<Integer, Set<Integer> > verticalRepresentation){
         String toPrint="";
-        TreeMap<Integer, ArrayList<Integer> > verticalProjectedCopy = new TreeMap <>( verticalRepresentation );
+        TreeMap<Integer, Set<Integer> > verticalProjectedCopy = new TreeMap <>( verticalRepresentation );
+        Set <Integer> patternList;
         for ( int lastPatternElement : verticalRepresentation.keySet()){
-            double frequency = computeFrequency( verticalRepresentation.get( lastPatternElement ).size() );
+            this.frequency = computeFrequency( verticalRepresentation.get( lastPatternElement ).size());
             if( frequency >= minFrequency){
                 toPrint = toPrint.concat( printElement( lastPatternElement, frequency) );
             }
-            TreeMap<Integer, ArrayList<Integer> > projectedVertical =
+            TreeMap<Integer, Set<Integer> > projectedVertical =
                     projectDatabase(verticalProjectedCopy, lastPatternElement);
             verticalProjectedCopy.remove( lastPatternElement );
-            int [] patternList = { lastPatternElement };
+            patternList = new LinkedHashSet<Integer>() ;
+            patternList.add( lastPatternElement );
             toPrint = toPrint.concat( starter( patternList, projectedVertical) );
         }
         return toPrint;
     }
 
-    public String starter(int[] pattern, TreeMap<Integer, ArrayList<Integer> > verticalProjected){
+    public String starter(Set<Integer> pattern, TreeMap<Integer, Set<Integer> > verticalProjected){
         String toPrint="";
-        TreeMap<Integer, ArrayList<Integer> > verticalProjectedCopy = new TreeMap <>( verticalProjected );
+        TreeMap<Integer, Set<Integer> > verticalProjectedCopy = new TreeMap <>( verticalProjected );
+        Set<Integer> patternList;
         for ( int lastPatternElement : verticalProjected.keySet()){
-            double frequency = computeFrequency( verticalProjected.get( lastPatternElement ).size() );
+            this.frequency = computeFrequency( verticalProjected.get( lastPatternElement ).size() );
             if( frequency >= minFrequency){
                 toPrint = toPrint.concat( printElement(pattern, lastPatternElement, frequency) );
             }
-            TreeMap<Integer, ArrayList<Integer> > projectedVertical =
+            TreeMap<Integer, Set<Integer> > projectedVertical =
                     projectDatabase(verticalProjectedCopy, lastPatternElement);
             verticalProjectedCopy.remove( lastPatternElement );
-            int [] patternList = combine( pattern, lastPatternElement);
+            patternList = new LinkedHashSet<Integer>(pattern);
+            patternList.add( lastPatternElement);
             if(projectedVertical.size() > 0){
                 toPrint = toPrint.concat( starter( patternList, projectedVertical) );
             }
@@ -55,48 +61,48 @@ public class ECLAT {
         return length/numberOfTransactions;
     }
 
-    private TreeMap<Integer, ArrayList<Integer> > projectDatabase( TreeMap<Integer, ArrayList<Integer> > previousDatabase,
-                                                                   int element){
-        TreeMap<Integer, ArrayList<Integer>> projectedDatabase = new TreeMap <>();
-        TreeMap<Integer, ArrayList<Integer>> previousDatabaseCopy = new TreeMap <>(previousDatabase);
-        ArrayList<Integer> pattern = previousDatabase.get( element );
-        previousDatabaseCopy.remove( element );
-        boolean singleMatch; //match of one single item
-        boolean fullMatch; //match if the entire transaction (== at least one match)
-        int transactionIndex = 0;
-        int patternIndex;
-        ArrayList <Integer> temp = new ArrayList <>();
-        for ( Map.Entry<Integer, ArrayList<Integer>> entry : previousDatabaseCopy.entrySet()) {
-            //if ( entry.getKey() > element ) {
-                patternIndex = 0;
-                fullMatch = false;
-                transactionIndex = 0;
-                while ( patternIndex < pattern.size() ) {
-                    transactionIndex = 0; //TODO maybe we can optimize this
-                    singleMatch = false;
+    private TreeMap<Integer, Set<Integer> > projectDatabase( TreeMap<Integer, Set<Integer> > previousDatabase, int element){
 
-                    while ( transactionIndex < entry.getValue().size() ) {
-                        if ( pattern.get( patternIndex ).equals( entry.getValue().get( transactionIndex ) ) ) {
-                            singleMatch = true;
-                            transactionIndex++;
-                            break;
-                        }
-                        transactionIndex++;
-                    }
-                    if ( singleMatch ) {
-                        temp.add( pattern.get( patternIndex ) );
-                        fullMatch = true;
-                    }
-                    patternIndex++;
+        TreeMap<Integer, Set<Integer>> projectedDatabase = new TreeMap <>();
+        TreeMap<Integer, Set<Integer>> previousDatabaseCopy = new TreeMap <>(previousDatabase);
+        Set<Integer> pattern = previousDatabase.get( element );
+        previousDatabaseCopy.remove( element );
+        boolean fullMatch = false; //match if the entire transaction (== at least one match)
+        Set<Integer> temp = null;
+        Set<Integer> transaction = null;
+        for ( Map.Entry<Integer, Set<Integer>> entry : previousDatabaseCopy.entrySet()) {
+            transaction = entry.getValue();
+            if(transaction.size() >= minTransactionLenght){ //no enough frequency is possible
+                if( transaction.size() > pattern.size()){
+                    temp = performAND( transaction, pattern );
+                }else{
+                    temp = performAND( pattern, transaction );
                 }
-                if ( fullMatch ) {
-                    projectedDatabase.put( entry.getKey(), new ArrayList <>( temp ) );
-                    temp.clear();
+                if ( temp != null ) {
+                    if(temp.size() >= minTransactionLenght){
+                        projectedDatabase.put( entry.getKey(), temp );
+                    }
+                    temp = null;
+                    fullMatch = false;
                 }
-           // }
+            }
+
+
+
         }
         return projectedDatabase;
     }
 
-
+    private Set<Integer> performAND(Set<Integer> biggerSet, Set<Integer> smallerSet){
+        Set<Integer> temp = null;
+        for(int patternElement : smallerSet){
+            if(biggerSet.contains( patternElement )){
+                if(temp == null) {
+                    temp = new LinkedHashSet<>();
+                }
+                temp.add( patternElement );
+            }
+        }
+        return temp;
+    }
 }
