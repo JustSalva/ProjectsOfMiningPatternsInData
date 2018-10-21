@@ -3,14 +3,13 @@ package Tools;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Stream;
 import static Tools.Utilities.combine;
 
 
 public class ECLATDataset{
-    private final TreeMap<Integer, int[] > verticalRepresentation;
+    private final TreeMap<Integer, Set<Integer> > verticalRepresentation;
     private final int transactionNumber;
 
     public ECLATDataset(String filePath) {
@@ -34,21 +33,19 @@ public class ECLATDataset{
             System.err.println("Unable to read dataset file!");
             e.printStackTrace();
         }
-        for(int[] transaction : database) {
-            for ( int i = 0; i < transaction.length; i++ ) {
-                if ( !verticalRepresentation.containsKey( transaction[ i ] ) ) {
-                    verticalRepresentation.put( transaction[ i ], new int[]{} );
-                }
+        for (int i = 0; i < database.size(); i++) {
+            // for each item in that transaction
+            for (Integer item : database.get(i)) {
 
-                verticalRepresentation.replace( transaction[ i ],
-                        combine( verticalRepresentation.get( transaction[ i ] ), transactionNumber ) );
+                Set < Integer > set = verticalRepresentation.computeIfAbsent( item, k -> new LinkedHashSet < Integer >() );
+                set.add(i+1);
             }
             transactionNumber++;
         }
         this.transactionNumber = transactionNumber;
     }
 
-    public TreeMap < Integer, int[] > getVerticalRepresentation () {
+    public TreeMap < Integer, Set<Integer> > getVerticalRepresentation () {
         return verticalRepresentation;
     }
 

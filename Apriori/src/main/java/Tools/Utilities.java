@@ -1,5 +1,8 @@
 package Tools;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class Utilities {
 
     public static int[] combine(int[] list, int element) {
@@ -30,6 +33,14 @@ public class Utilities {
     }
 
     public static String printElement(int[] path, int key, double frequency){
+        String toPrint = "[";
+        for( Integer element :path){
+            toPrint= toPrint.concat( element.toString() ).concat(", ");
+        }
+        toPrint = toPrint.concat( key +"]" );
+        return toPrint.concat( "  ("+ Double.toString( frequency ) +")" + "\n");
+    }
+    public static String printElement( Set<Integer> path, int key, double frequency){
         String toPrint = "[";
         for( Integer element :path){
             toPrint= toPrint.concat( element.toString() ).concat(", ");
