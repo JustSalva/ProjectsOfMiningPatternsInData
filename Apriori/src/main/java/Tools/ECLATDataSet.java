@@ -6,11 +6,19 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
-
+/**
+ * Utilities class to manage a dataset stored in a external file, for the ECLAT algorithm
+ */
 public class ECLATDataSet {
     private final TreeMap<Integer, Set<Integer> > verticalRepresentation;
     private final int transactionNumber;
 
+    /**
+     * Constructor: reads the dataset and initialises fields.
+     * @param filePath the path to the dataset file. It is assumed to have the following format:
+     *                 Each line corresponds to a transaction. Blank lines might be present and will be ignored.
+     *                 Items in a transaction are represented by integers separated by single spaces.
+     */
     public ECLATDataSet ( String filePath) {
         int transactionNumber = 1;
         int temp;

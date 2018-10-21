@@ -1,0 +1,20 @@
+chess.dat
+0.75 4097 103375952
+mushroom.dat
+0.75 129 20717000
+pumsb_star.dat
+0.75 1047 15252440
+retail.dat
+0.75 628 10131936
+pumsb.dat
+0.75 3510174 443546304
+accidents.dat
+0.75 17506 360179032
+chess.dat
+0.7 6813 48636760
+mushroom.dat
+0.7 56 15728640
+pumsb_star.dat
+0.7 797 27270488
+retail.dat
+0.7 490 53465736

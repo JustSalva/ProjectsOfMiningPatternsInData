@@ -7,9 +7,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 /**
- * Utilities class to manage a dataset stored in a external file.
- *
- * @author Charles Thomas (charles.thomas@uclouvain.be)
+ * Utilities class to manage a dataset stored in a external file, for the Apriori algorithm
  */
 public class AprioriDataSet {
     private final TreeMap<Integer, Double> itemsFound ; //The different items in the dataset

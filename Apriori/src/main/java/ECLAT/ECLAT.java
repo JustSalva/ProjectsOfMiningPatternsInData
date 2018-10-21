@@ -4,10 +4,23 @@ import java.util.*;
 
 import static Tools.Utilities.*;
 
+/**
+ * ECLAT implementation
+ */
 public class ECLAT {
+    /**
+     * Total number of transactions in the database
+     */
     private final int numberOfTransactions;
+    /**
+     * minimum frequency of the pattern to be found
+     */
     private double minFrequency;
+
     private double frequency; //temp variable to optimize
+    /**
+     * minimum support of the pattern to be found
+     */
     private double minTransactionLenght;
 
     public ECLAT ( int numberOfTransactions, double minFrequency ) {
@@ -35,7 +48,7 @@ public class ECLAT {
         return toPrint;
     }
 
-    public String starter(Set<Integer> pattern, TreeMap<Integer, Set<Integer> > verticalProjected){
+    private String starter ( Set < Integer > pattern, TreeMap < Integer, Set < Integer > > verticalProjected ){
         String toPrint="";
         TreeMap<Integer, Set<Integer> > verticalProjectedCopy = new TreeMap <>( verticalProjected );
         Set<Integer> patternList;

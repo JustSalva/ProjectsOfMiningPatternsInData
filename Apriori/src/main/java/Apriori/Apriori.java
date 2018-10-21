@@ -25,7 +25,7 @@ public class Apriori {
     /**
      * Total number of transactions in the database
      */
-    private int transactionNumber;
+    private int numberOfTransactions;
 
     /**
      *  root of the search tree
@@ -40,7 +40,7 @@ public class Apriori {
     public Apriori ( AprioriDataSet dataset, double minFrequency ) {
         this.dataset = dataset;
         this.minFrequency = minFrequency;
-        this.transactionNumber = dataset.transactionNumber();
+        this.numberOfTransactions = dataset.transactionNumber();
         this.root = new HashTree();
     }
 
@@ -132,7 +132,7 @@ public class Apriori {
 
         String toPrint = "";
         for( Candidate candidate: candidates ){
-            double frequency  = candidate.getSupport() / this.transactionNumber;
+            double frequency  = candidate.getSupport() / this.numberOfTransactions;
             if( frequency >= this.minFrequency ){
                 father.addElement( candidate.getKey(), frequency);
                 toPrint = toPrint.concat( printElement( path, key, candidate.getKey(), frequency ) );
@@ -150,7 +150,7 @@ public class Apriori {
         String toPrint = "";
         // First level of the tree
         for ( Map.Entry<Integer, Double> entry : dataset.getItems().entrySet()){
-            frequency = entry.getValue() / transactionNumber;
+            frequency = entry.getValue() / numberOfTransactions;
             if( frequency >= minFrequency){
                 root.addElement(entry.getKey(),frequency);
                 toPrint = toPrint.concat( printElement(entry.getKey(), frequency ) );
