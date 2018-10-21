@@ -1,0 +1,70 @@
+\documentclass[11pt, a4paper, draft]{report}
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=25mm,
+ right=25mm,
+ top=30mm,
+ bottom=25mm,
+ headsep=7mm}
+
+\usepackage{graphicx}
+\usepackage{todonotes}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{comment}
+\usepackage{lipsum}
+
+
+\graphicspath{ {images/} }
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+	\begin{titlepage}
+		\centering
+		% logo image
+		\includegraphics{logo.png}\par\vspace{1cm}
+		% institution 
+		{\scshape\LARGE\bfseries Politecnico di Milano \par}
+		\vspace{2cm}
+		{\scshape\Large \par}
+		\vspace{1.5cm}
+		% title
+		{\Huge\bfseries Notes of \par}
+		\vspace{1cm}
+		% versioning
+		{\small Version 1.0 - 10/08/2018\par}
+		\vspace{1cm}
+		% author
+		{\Large\itshape Alessandra Rossaro, Matteo Salvadore\par}
+
+		\vfill
+
+		% Bottom of the page
+		{\large AY 2018-2019\par}
+	\end{titlepage}
+
+	\tableofcontents{}
+
+	\listoftodos[Notes]
+
+	\chapter{CHAPTER 1}
+	\label{ch:CHAPTER_ONE}
+		\begin{comment}
+			\input{./1-Project/group_info.tex}
+		\end{comment}
+			\todo[inline]{write something meaningful!}
+			\lipsum
+
+\end{document}
