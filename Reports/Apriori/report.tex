@@ -69,12 +69,49 @@
 			\newline \newline
 			We have then implemented the following optimizations:
 			\begin{itemize}
-				\item we generate candidates according to the \textit{Merging itemsets technique}: when we expand nodes to generate new candidates we take the nodes with same father of the node that is being expanded and we select as candidates only those have keys with value higher w.r.t. the current node's key.
-				\item after the nodes generation we prune the infrequent candidates by computing their frequency. Those nodes are not considered for the new levels' expansion.
-				\item our HashTree data structure is implemented as a \textit{Prefix Tree} to make the merging more efficient, the order of the items in the tree is the natural Integer order.
+				\item We generate candidates according to the \textit{Merging itemsets technique}: when we expand nodes to generate new candidates we take the nodes with same father of the node that is being expanded and we select as candidates only those have keys with value higher w.r.t. the current node's key.
+				\item After the nodes generation we prune the infrequent candidates by computing their frequency. Those nodes are not considered for the new levels' expansion.
+				\item Our HashTree data structure is implemented as a \textit{Prefix Tree} to make the merging more efficient, the order of the items in the tree is the natural Integer order.
 			\end{itemize}
 		\subsection{ECLAT}
+			To implement the ECLAT algorithm we have redefined the \textit{DataSet} class into \textit{ECLATDataSet} class, since this algorithm needs to read database and to convert it into its \textit{Vertical Representation}.
+			This new class loads the entire database in memory and then it creates the \textit{Vertical Representation} using a TreeMap that contains as key an Integer that represents a singular element and as value an HashSet of Integers that represent the numbers of transactions in which the singular element appears.
+			We have decided to use this kind of data structure since just using an array to store the transaction numbers was inefficient. With our improvement the access complexity to insert an item in an HashSet is $O(1)$ and to access to the TreeMap is still $O(1)$.\newline
+			This kind of data structure is used whenever the algorithm projects the Database on a new item.
+			We have implemented the ECLAT algorithm following the specifications of \textit{Depth-First Search} algorithms explained in the slides of the course.
+			\newline \newline
+			We have implemented the following optimizations:
+			\begin{itemize}
+				\item As explained before, we have used an HashSet in our data structure to store the list of transaction numbers in which the singular item appears. Our decision was the result of a sequence of attempts to choose the most performant data structure: our first choice was an ArrayList that we have discarded because the execution time spent to transform the Database in the \textit{Vertical Representation} was too high, the same same problem occurred with our second choice: a vector of Integer.
+				\item Thanks to the HashSet we can perform the intersection more efficiently since, instead of scanning two lists, we can just take the shorter list and search for the singular items in the longer one exploiting the fact that checking if an element is present in a HashSet is $O(1)$, then the total complexity of an intersection is $O(l)$ where \textit{l} is the length of the smaller HashSet.
+				It is worth noting that comparing the shorter HashSet with the longer minimizes the number of comparisons to be performed.
+				\item Before the computation of the intersections among a line of the \textit{Vertical Representation} and an item, we skip the computation with the Hashset with a support lower than minimum support. This is equivalent to the perform \textit{pruning} on the SearchTree.
+			
+			\end{itemize}
+			
 	\section{Performances}
+		We have decide to use only the following datasets to compute the performances in terms of time and memory with different support values:
+		\begin{itemize}
+			\item \textit{chess.dat}
+			\item \textit{mushroom.dat}
+			\item \textit{pumsb.dat}
+			\item \textit{pumsb\_star.dat}
+			\item \textit{connect.dat}
+			\item \textit{retail.dat}
+			\item \textit{accidents.dat}
+		\end{itemize}
+		The datasets are ordered according to the ascending number of rows.
+		
+		We have decided to discard \textit{toy.dat} because of its dimension: the results of the performances computed were inconsistent w.r.t. the overhead (in terms of memory occupied and elapsed time) by the JVM.
+		\newline
+		
+		The first computation of performances was with a range of values between 0.1 and 0.9, but we have noticed that already from the first dataset, for a frequency equal to 0.4, the running time was too high to be computed from our laptop.
+		
+		For this reason we have decided to use a frequency that starts from 0.95 and to use a step of 0.05 and to run the performance script until \todo{decretare il valore minore per le frequenze}
+		 
+		\subsection{Apriori}
+		\subsection{ECLAT}
+			
 		
 
 \end{document}
