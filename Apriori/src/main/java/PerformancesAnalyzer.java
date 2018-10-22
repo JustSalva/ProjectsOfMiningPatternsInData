@@ -7,17 +7,17 @@ import java.lang.management.ManagementFactory;
 
 public class PerformancesAnalyzer {
     private static final long MEGABYTE = 1024L * 1024L;
-    private static String[] files= {"mushroom.dat","retail.dat"};
+    private static String[] files= {"pumsb.dat"};
 
     public static long bytesToMegabytes(long bytes) {
         return bytes / MEGABYTE;
     }
 
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-        File f = new File("result4.txt");
-        PrintWriter writer = new PrintWriter("result4.txt", "UTF-8");
+        File f = new File("ECLAT_result5.txt");
+        PrintWriter writer = new PrintWriter("ECLAT_result5.txt", "UTF-8");
 
-        for( double minFrequency = 0.4; minFrequency>= 0.05; minFrequency -= 0.05 ){
+        for( double minFrequency = 0.8; minFrequency>= 0.05; minFrequency -= 0.05 ){
             for(String filePath : files){
                 writer.println( filePath );
                 filePath = "/mnt/Shared/GitHub/ProjectsOfMiningPatternsInData/Apriori/src/main/resources/datasets" +
@@ -25,7 +25,7 @@ public class PerformancesAnalyzer {
                 // I assume you will know how to create a object Person yourself...
                 long startTime = System.currentTimeMillis();
 
-                FrequentItemsetMiner.apriori( filePath, minFrequency );
+                FrequentItemsetMiner.alternativeMiner( filePath, minFrequency );
 
                 long stopTime = System.currentTimeMillis();
                 long elapsedTime = stopTime - startTime;

@@ -1,7 +1,9 @@
 import Apriori.Apriori;
 import ECLAT.ECLAT;
+import FPGrowth.FPGrowth;
 import Tools.AprioriDataSet;
 import Tools.ECLATDataSet;
+import Tools.FPGrowthDataSet;
 
 /**
  * Skeleton class for the project 1 of the LINGI2364 course.
@@ -70,5 +72,11 @@ public class FrequentItemsetMiner{
         ECLATDataSet dataset = new ECLATDataSet( filepath );
         ECLAT eclat = new ECLAT( dataset.getTransactionNumber(), minFrequency );
         System.out.println( eclat.starter(dataset.getVerticalRepresentation()) );
+    }
+
+    public static void secondAlternativeMiner(String filepath, double minFrequency){
+        FPGrowthDataSet dataset = new FPGrowthDataSet( filepath, minFrequency);
+        FPGrowth fpGrowth = new FPGrowth( dataset , minFrequency);
+        System.out.println( fpGrowth.starter() );
     }
 }

@@ -1,5 +1,8 @@
 package Tools;
 
+import FPGrowth.FPTreeNode;
+
+import java.util.ArrayList;
 import java.util.Set;
 
 public class Utilities {
@@ -39,6 +42,19 @@ public class Utilities {
         toPrint = toPrint.concat( key +"]" );
         return toPrint.concat( "  ("+ Double.toString( frequency ) +")" + "\n");
     }
+
+    public static String printElement( int[] previousPath, double frequency, FPTreeNode node ){
+        String toPrint = "[";
+        for( Integer element :previousPath){
+            toPrint= toPrint.concat( element.toString() ).concat(", ");
+        }
+        while( node != null){
+            toPrint= toPrint.concat( Integer.toString( node.getKey()) ).concat(", ");
+        }
+        toPrint = toPrint.concat("]" );
+        return toPrint.concat( "  ("+ Double.toString( frequency ) +")" + "\n");
+    }
+
     public static String printElement( Set<Integer> path, int key, double frequency){
         String toPrint = "[";
         for( Integer element :path){
