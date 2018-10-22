@@ -101,17 +101,23 @@
 			\item \textit{accidents.dat}
 		\end{itemize}
 		The datasets are ordered according to the ascending number of rows.
-		
+		\newline\noindent
 		We have decided to discard \textit{toy.dat} because of its dimension: the results of the performances computed were inconsistent w.r.t. the overhead (in terms of memory occupied and elapsed time) by the JVM.
-		\newline
-		
-		The first computation of performances was with a range of values between 0.1 and 0.9, but we have noticed that already from the first dataset, for a frequency equal to 0.4, the running time was too high to be computed from our laptop.
-		
-		For this reason we have decided to use a frequency that starts from 0.95 and to use a step of 0.05 and to run the performance script until \todo{decretare il valore minore per le frequenze}
-		 
+		\newline\newline
+		\noindent
+		The first computation of performances was with a range of values between 0.1 and 0.9, but we have noticed that already from the first data-set, for a frequency equal to 0.4, the running time was too high to be computed from our laptop.\newline
+		For this reason we have decided to use a frequency that starts from 0.95 and to use a step of 0.05 and to run the performance script until the running time were too long; whenever we noticed that a data-set were taking too long for a specific frequency we have ignored it for lower frequencies.
+		In the following sections, we have plotted the performances in terms of running times and used memory, w.r.t. different frequency values and for all data-sets. The running time graphs are plotted with axis that uses  logarithmic scale for the time.
+		We have encountered some difficulties in measuring the memory usage of our Java application since the values obtained were not too much coherent between different executions with the same parameters and even forcing the garbage collector to flush the memory was not so useful to tamper this phenomenon; We've then tried to average the results of consequent runs to keep the measurement performances coherent.
 		\subsection{Apriori}
+			\includegraphics[scale =0.7]{Apriori.JPG}\par\vspace{1cm}
+			As you can notice in the graph, the running time of our algorithm increases as the frequency decreases, for all data-sets, this kind of increase is exponential; for smaller data-sets this kind of phenomenon is acceptable (e.g. \textit{retail.dat}), while for data-sets with very long transactions and very similar transactions (e.g. \textit{connect.dat}) the running time increases more rapidly. \newline
+			We have expected that \textit{accidents.dat} database would be way more time requiring w.r.t.the other data-sets, since it has the longest number of transactions but we have observed that the length of the transactions and the similarities of the transactions have more impact on the running time.
+			We've noticed that the memory usage more or less grows as the frequency decrease and explodes at the same frequencies at which the running time exponential function begins to assume a very high slope (when it starts tending to infinite).
 		\subsection{ECLAT}
-			
-		
+			\includegraphics[scale =0.7]{ECLAT.JPG}\par\vspace{1cm}
+			As you can notice in the graph, the behavior we have obtained with our implementation of ECLAT is very similar to the Apriori performances, but the exponential have a slightly smaller grow rate, and so their growth becomes very fast with slightly lower threshold of frequencies.
+			An exception of this observation is that the data-set \textit{accidents.dat}, that has a way higher number of transactions probably has an higher impact on the performances due to the vertical representation usage in this algorithm, and so our ECLAT algorithm performances are worse w.r.t. Apriori for this specific data set.
+			We have expected that the memory usage would have followed more or less the same behavior, but even with multiple measurements the behavior obtained is fuzzy, in particular all the data-sets at exception of \textit{connect.dat}, \textit{chess.dat} and \textit{accidents.dat}  we can make the same observations we have done with our Apriori algorithm, but we cannot explain the behavior of these three databases
 
 \end{document}
