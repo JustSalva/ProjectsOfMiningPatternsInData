@@ -74,6 +74,8 @@ public class FPGrowthDataSet {
             System.err.println( "Unable to read dataset file!" );
             e.printStackTrace();
         }
+        root.setHeaderTable( headerTable );
+        root.setItemsSupports( itemsFound );
 
 
     }

@@ -43,13 +43,16 @@ public class Utilities {
         return toPrint.concat( "  ("+ Double.toString( frequency ) +")" + "\n");
     }
 
-    public static String printElement( int[] previousPath, double frequency, FPTreeNode node ){
+    public static String printElement( int[] previousPath, double frequency, FPTreeNode node,
+                                       int numberOfIncludedItems){
         String toPrint = "[";
         for( Integer element :previousPath){
             toPrint= toPrint.concat( element.toString() ).concat(", ");
         }
-        while( node != null){
-            toPrint= toPrint.concat( Integer.toString( node.getKey()) ).concat(", ");
+        FPTreeNode tempNode = node;
+        for(int i=0; i<=numberOfIncludedItems; i++){
+            toPrint= toPrint.concat( Integer.toString( tempNode.getKey()) ).concat(", ");
+            tempNode = node.getFather();
         }
         toPrint = toPrint.concat("]" );
         return toPrint.concat( "  ("+ Double.toString( frequency ) +")" + "\n");

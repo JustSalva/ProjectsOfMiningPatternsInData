@@ -47,6 +47,8 @@ public class FrequentItemsetMiner{
                     break;
                 case "alternative": alternativeMiner(filepath, minFrequency);
                     break;
+                case "alternative2": secondAlternativeMiner(filepath, minFrequency);
+                    break;
             }
         }
     }
