@@ -19,6 +19,7 @@
 \usepackage{longtable}
 \usepackage{comment}
 \usepackage{lipsum}
+\usepackage{multicol}
 
 
 \graphicspath{ {images/} }
@@ -91,15 +92,17 @@
 			
 	\section{Performances}
 		We have decide to use only the following datasets to compute the performances in terms of time and memory with different support values:
-		\begin{itemize}
-			\item \textit{chess.dat}
-			\item \textit{mushroom.dat}
-			\item \textit{pumsb.dat}
-			\item \textit{pumsb\_star.dat}
-			\item \textit{connect.dat}
-			\item \textit{retail.dat}
-			\item \textit{accidents.dat}
-		\end{itemize}
+		\begin{multicols}{2}
+			\begin{itemize}
+				\item \textit{chess.dat}
+				\item \textit{mushroom.dat}
+				\item \textit{pumsb.dat}
+				\item \textit{retail.dat}
+				\item \textit{pumsb\_star.dat}
+				\item \textit{connect.dat}
+				\item \textit{accidents.dat}
+			\end{itemize}
+		\end{multicols}
 		The datasets are ordered according to the ascending number of rows.
 		\newline\noindent
 		We have decided to discard \textit{toy.dat} because of its dimension: the results of the performances computed were inconsistent w.r.t. the overhead (in terms of memory occupied and elapsed time) by the JVM.
@@ -110,14 +113,29 @@
 		In the following sections, we have plotted the performances in terms of running times and used memory, w.r.t. different frequency values and for all data-sets. The running time graphs are plotted with axis that uses  logarithmic scale for the time.
 		We have encountered some difficulties in measuring the memory usage of our Java application since the values obtained were not too much coherent between different executions with the same parameters and even forcing the garbage collector to flush the memory was not so useful to tamper this phenomenon; We've then tried to average the results of consequent runs to keep the measurement performances coherent.
 		\subsection{Apriori}
-			\includegraphics[scale =0.7]{Apriori.JPG}\par\vspace{1cm}
+			\noindent
 			As you can notice in the graph, the running time of our algorithm increases as the frequency decreases, for all data-sets, this kind of increase is exponential; for smaller data-sets this kind of phenomenon is acceptable (e.g. \textit{retail.dat}), while for data-sets with very long transactions and very similar transactions (e.g. \textit{connect.dat}) the running time increases more rapidly. \newline
 			We have expected that \textit{accidents.dat} database would be way more time requiring w.r.t.the other data-sets, since it has the longest number of transactions but we have observed that the length of the transactions and the similarities of the transactions have more impact on the running time.
-			We've noticed that the memory usage more or less grows as the frequency decrease and explodes at the same frequencies at which the running time exponential function begins to assume a very high slope (when it starts tending to infinite).
+			We've noticed that the memory usage more or less grows as the frequency decrease and explodes at the same frequencies at which the running time exponential function begins to assume a very high slope (when it starts tending to infinite).\newline
+			\includegraphics[scale =0.6]{Apriori.JPG}
 		\subsection{ECLAT}
-			\includegraphics[scale =0.7]{ECLAT.JPG}\par\vspace{1cm}
+			\includegraphics[scale =0.6]{ECLAT.JPG}
+			\newline
 			As you can notice in the graph, the behavior we have obtained with our implementation of ECLAT is very similar to the Apriori performances, but the exponential have a slightly smaller grow rate, and so their growth becomes very fast with slightly lower threshold of frequencies.
 			An exception of this observation is that the data-set \textit{accidents.dat}, that has a way higher number of transactions probably has an higher impact on the performances due to the vertical representation usage in this algorithm, and so our ECLAT algorithm performances are worse w.r.t. Apriori for this specific data set.
 			We have expected that the memory usage would have followed more or less the same behavior, but even with multiple measurements the behavior obtained is fuzzy, in particular all the data-sets at exception of \textit{connect.dat}, \textit{chess.dat} and \textit{accidents.dat}  we can make the same observations we have done with our Apriori algorithm, but we cannot explain the behavior of these three databases
+			
+			\noindent
+		\subsection{Our system specification}
+			All our measurements have been tested on a laptop with the following specifications:
+			\begin{multicols}{2}
+				\begin{itemize}
+					\item Processor: Intel® Core™ i5-6198DU CPU @ 2.30GHz x 4 
+					\item RAM: 12 GiB - DDR4
+					\item OS: Ubuntu 18.04.1 LTS
+					\item JRE: Java 8u191
+				\end{itemize}
+			\end{multicols}
+			
 
 \end{document}
