@@ -45,7 +45,7 @@ public class TransactionPrefixSpan {
         try {
             //TODO
             int temp = transactionMapping.get( element ).get( position );
-            if(temp <= lastPositionInTransaction){
+            if(temp < lastPositionInTransaction){
                 for(int i=1;true; i++){
                     temp = transactionMapping.get( element ).get( position +i );
                     if(temp > lastPositionInTransaction){
