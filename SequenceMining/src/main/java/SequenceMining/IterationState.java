@@ -1,7 +1,8 @@
-package PrefixSpan;
+package SequenceMining;
 
-import Exceptions.NotPresentSymbolException;
+import SequenceMining.Exceptions.NotPresentSymbolException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,26 @@ public class IterationState {
         else{
             return  0;
         }
+    }
+
+    public void addLastTransactionIndexPerSymbol ( String symbol, Integer position,
+                                                   ArrayList<Integer> elementPositions ) {
+        if(lastTransactionIndexPerSymbol.containsKey( symbol )){
+            int previousPosition = lastTransactionIndexPerSymbol.get( symbol );
+            this.lastTransactionIndexPerSymbol.put( symbol, previousPosition + 1 );
+        }else{
+            int i = 1;
+            for( Integer element: elementPositions){
+                if ( !element.equals( position ) ){
+                    i++;
+                }else{
+                    break;
+                }
+            }
+            this.lastTransactionIndexPerSymbol.put( symbol, i );
+        }
+
+        this.indexForDirectAccess = position;
     }
 
     public void addLastTransactionIndexPerSymbol ( String symbol, Integer position) {

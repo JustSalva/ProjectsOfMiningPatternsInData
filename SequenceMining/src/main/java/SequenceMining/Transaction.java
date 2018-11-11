@@ -1,18 +1,20 @@
-package PrefixSpan;
+package SequenceMining;
 
-import Exceptions.NotPresentSymbolException;
+import SequenceMining.Exceptions.NotPresentSymbolException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TransactionPrefixSpan {
+public class Transaction {
     private Map<String, ArrayList<Integer> > transactionMapping;
     private int transactionLength;
+    private boolean isPositive;
 
-    public TransactionPrefixSpan () {
+    public Transaction ( boolean isPositive ) {
         this.transactionMapping = new HashMap <>();
         this.transactionLength = 0;
+        this.isPositive = isPositive;
     }
 
     public Map < String, ArrayList < Integer > > getTransactionMapping () {
@@ -43,7 +45,6 @@ public class TransactionPrefixSpan {
 
     public Integer getPosition( int position, String element, int lastPositionInTransaction) throws NotPresentSymbolException {
         try {
-            //TODO
             int temp = transactionMapping.get( element ).get( position );
             if(temp < lastPositionInTransaction){
                 for(int i=1;true; i++){
@@ -58,5 +59,16 @@ public class TransactionPrefixSpan {
             throw new NotPresentSymbolException();
         }
 
+    }
+    public  ArrayList<Integer> getElementMapping (String element) throws NotPresentSymbolException{
+        ArrayList<Integer> temp = transactionMapping.get( element );
+        if( temp != null){
+            return temp;
+        }
+        throw new NotPresentSymbolException();
+    }
+
+    public boolean isPositive () {
+        return isPositive;
     }
 }

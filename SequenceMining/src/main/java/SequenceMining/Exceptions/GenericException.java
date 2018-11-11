@@ -1,4 +1,4 @@
-package Exceptions;
+package SequenceMining.Exceptions;
 
 public abstract class GenericException extends Exception {
 

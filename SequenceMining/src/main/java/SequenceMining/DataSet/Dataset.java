@@ -1,25 +1,24 @@
-package DataSet;
+package SequenceMining.DataSet;
 
-import PrefixSpan.TransactionPrefixSpan;
+
+import SequenceMining.Transaction;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 
 
-public class DatasetPrefixSpan {
-    private ArrayList<String> items; //The different items in the dataset
-    private ArrayList< TransactionPrefixSpan > transactions;
+public class Dataset {
+    private HashSet<String>  items; //The different items in the dataset
+    private ArrayList< Transaction > transactions;
 
-    public DatasetPrefixSpan ( String filePath) {
-        items = new ArrayList <>();
+    public Dataset ( String filePath, boolean isPositive) {
+        items = new HashSet<>();
         transactions = new ArrayList<>();
-        HashSet<String> itemsFound = new HashSet<>();
         try {
-            TransactionPrefixSpan currentTransaction = new TransactionPrefixSpan();
+            Transaction currentTransaction = new Transaction(isPositive);
             int i = 0;
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String tempElement;
@@ -28,12 +27,12 @@ public class DatasetPrefixSpan {
                 String line = reader.readLine();
                 if (line.equals( "") ){
                     transactions.add( currentTransaction );
-                    currentTransaction = new TransactionPrefixSpan();
+                    currentTransaction = new Transaction(isPositive);
                     i = 0;
                 }else{
                     tempElement = line.split( " ")[0];
                     currentTransaction.addTransactionMapping(tempElement ,i );
-                    itemsFound.add(tempElement);
+                    items.add(tempElement);
                     i++;
                 }
             }
@@ -43,15 +42,13 @@ public class DatasetPrefixSpan {
             System.err.println("Unable to read dataset file!");
             e.printStackTrace();
         }
-        items = new ArrayList <>( itemsFound );
-        Collections.sort( items );
     }
 
-    public ArrayList < String > getItems () {
+    public HashSet<String> getItems () {
         return items;
     }
 
-    public ArrayList < TransactionPrefixSpan > getTransactions () {
+    public ArrayList < Transaction > getTransactions () {
         return transactions;
     }
 }
