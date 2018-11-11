@@ -4,23 +4,23 @@ import java.util.Collections;
 import java.util.TreeSet;
 
 public class PrefixSpan extends GenericAlgorithm {
-    private float minSupport;
-    private TreeSet<Float> maxValuesOfK;
+    private int minSupport;
+    private TreeSet<Integer> maxValuesOfK;
 
     public PrefixSpan ( int k ) {
         super( k );
-        this.minSupport = Float.MAX_VALUE;
-        this.maxValuesOfK = new TreeSet<Float>( Collections.reverseOrder() ) ;
+        this.minSupport = Integer.MAX_VALUE;
+        this.maxValuesOfK = new TreeSet<Integer>( Collections.reverseOrder() ) ;
     }
 
     @Override
-    boolean checkConstraintsInFirstLevel ( String pattern, Float patternSupportPositive, Float patternSupportNegative ) {
+    boolean checkConstraintsInFirstLevel ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
         return checkConstraints( "",pattern, patternSupportPositive, patternSupportNegative );
     }
 
     @Override
-    void addMinElement ( String pattern, Float patternSupportPositive, Float patternSupportNegative ) {
-        float totalSupport = patternSupportPositive + patternSupportNegative;
+    void addMinElement ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
+        int totalSupport = allFoundPatterns.get( pattern ).intValue();
         if( !maxValuesOfK.contains( totalSupport )){
             super.kCounter++;
             maxValuesOfK.add( totalSupport );
@@ -29,9 +29,9 @@ public class PrefixSpan extends GenericAlgorithm {
     }
 
     @Override
-    boolean checkConstraints ( String fatherPattern, String pattern, Float patternSupportPositive,
-                               Float patternSupportNegative ) {
-        float totalSupport = patternSupportPositive + patternSupportNegative;
+    boolean checkConstraints ( String fatherPattern, String pattern, Integer patternSupportPositive,
+                               Integer patternSupportNegative ) {
+        int totalSupport = allFoundPatterns.get( pattern ).intValue();
         if( totalSupport < minSupport){
             return false;
         }else if(totalSupport > minSupport && !maxValuesOfK.contains( totalSupport )){
@@ -45,10 +45,10 @@ public class PrefixSpan extends GenericAlgorithm {
     }
 
     @Override
-    void addToPatternList ( String pattern, Float patternSupportPositive, Float patternSupportNegative ) {
+    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
         positiveFoundPatterns.put( pattern, patternSupportPositive);
         negativeFoundPatterns.put( pattern, patternSupportNegative );
-        allFoundPatterns.put( pattern, ( patternSupportPositive+patternSupportNegative ) );
+        allFoundPatterns.put( pattern, (float)( patternSupportPositive+patternSupportNegative ) );
     }
 
     public static void main( String[] args) {
@@ -58,7 +58,7 @@ public class PrefixSpan extends GenericAlgorithm {
             String filepathNegative = args[1];
             int k = Integer.parseInt(args[2]);
             GenericAlgorithm genericAlgorithm = new PrefixSpan( k );
-            System.out.println( genericAlgorithm.start( filepathPositive, filepathNegative , 0) );
+            System.out.println( genericAlgorithm.start( filepathPositive, filepathNegative ,0) );
         }
 
     }

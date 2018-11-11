@@ -9,8 +9,8 @@ import static java.util.stream.Collectors.toMap;
 
 public abstract class GenericAlgorithm {
 
-    protected Map<String, Float> positiveFoundPatterns;
-    protected Map<String, Float> negativeFoundPatterns;
+    protected Map<String, Integer> positiveFoundPatterns;
+    protected Map<String, Integer> negativeFoundPatterns;
     protected ArrayList<String> items; //The different items in the dataset
     protected ArrayList< Transaction > transactions;
     protected Map<String, Float> allFoundPatterns;
@@ -32,7 +32,7 @@ public abstract class GenericAlgorithm {
         return printResults(numberOfDecimals);
     }
 
-    private void initializeDataset(String filePathPositive, String filePathNegative){
+    protected void initializeDataset(String filePathPositive, String filePathNegative){
 
         Dataset dataset = new Dataset( filePathPositive, true );
         HashSet<String> positiveItems = dataset.getItems();
@@ -44,7 +44,7 @@ public abstract class GenericAlgorithm {
         joinItems( positiveItems, dataset.getItems() );
     }
 
-    private void joinItems(HashSet<String> positiveItems, HashSet<String> negativeItems){
+    protected void joinItems(HashSet<String> positiveItems, HashSet<String> negativeItems){
         positiveItems.addAll( negativeItems );
         this.items = new ArrayList <>( positiveItems );
         Collections.sort( this.items );
@@ -56,8 +56,8 @@ public abstract class GenericAlgorithm {
         IterationState iterationState;
         int position;
         for(String item : items){
-            Float patternSupportPositive = 0f;
-            Float patternSupportNegative = 0f;
+            int patternSupportPositive = 0;
+            int patternSupportNegative = 0;
             transactionStartingPosition = new HashMap <>();
 
             for(int i = 0; i< transactions.size(); i++){
@@ -81,9 +81,10 @@ public abstract class GenericAlgorithm {
                 firstRecursionNodes.put( item, transactionStartingPosition );
 
             }
-            for(String pattern: firstRecursionNodes.keySet()){
-                start( pattern, firstRecursionNodes.get( pattern ) );
-            }
+
+        }
+        for(String pattern: firstRecursionNodes.keySet()){
+            start( pattern, firstRecursionNodes.get( pattern ) );
         }
 
     }
@@ -93,8 +94,8 @@ public abstract class GenericAlgorithm {
         IterationState iterationState;
         int position;
         for(String item : items){
-            Float patternSupportPositive = 0f;
-            Float patternSupportNegative = 0f;
+            Integer patternSupportPositive = 0;
+            Integer patternSupportNegative = 0;
             newTransactionStartingPosition = new HashMap <>();
 
             for(int transactionNumber : transactionStartingPosition.keySet()){
@@ -131,8 +132,8 @@ public abstract class GenericAlgorithm {
         }
     }
 
-    private boolean constraintsAreMet(String fatherPattern, String pattern, Float patternSupportPositive,
-                                      Float patternSupportNegative){
+    private boolean constraintsAreMet(String fatherPattern, String pattern, Integer patternSupportPositive,
+                                      Integer patternSupportNegative){
         if( kCounter<k ){
 
             addMinElement(pattern, patternSupportPositive, patternSupportNegative);
@@ -142,8 +143,8 @@ public abstract class GenericAlgorithm {
             return checkConstraints(fatherPattern, pattern, patternSupportPositive, patternSupportNegative);
         }
     }
-    private boolean constraintsAreMetInFirstLevel(String pattern, Float patternSupportPositive,
-                                                  Float patternSupportNegative){
+    private boolean constraintsAreMetInFirstLevel(String pattern, Integer patternSupportPositive,
+                                      Integer patternSupportNegative){
         if( kCounter<k ){
 
             addMinElement(pattern, patternSupportPositive, patternSupportNegative);
@@ -154,18 +155,18 @@ public abstract class GenericAlgorithm {
         }
     }
 
-    abstract boolean checkConstraintsInFirstLevel( String pattern, Float patternSupportPositive,
-                                                   Float patternSupportNegative);
-    abstract void addMinElement(String pattern, Float patternSupportPositive, Float patternSupportNegative);
-    abstract boolean checkConstraints(String fatherPattern, String pattern, Float patternSupportPositive,
-                                      Float patternSupportNegative);
+    abstract boolean checkConstraintsInFirstLevel( String pattern, Integer patternSupportPositive,
+                                      Integer patternSupportNegative);
+    abstract void addMinElement(String pattern, Integer patternSupportPositive, Integer patternSupportNegative);
+    abstract boolean checkConstraints(String fatherPattern, String pattern, Integer patternSupportPositive,
+                                      Integer patternSupportNegative);
 
 
-    abstract void addToPatternList(String pattern, Float patternSupportPositive, Float patternSupportNegative);
+    abstract void addToPatternList(String pattern, Integer patternSupportPositive, Integer patternSupportNegative);
 
 
     public String printResults(int numberOfDecimals){
-        String printFormat = "%."+Integer.toString( numberOfDecimals )+"f";
+        String format = "%." + Integer.toString( numberOfDecimals ) + "f";
         LinkedHashMap<String, Float> result = allFoundPatterns.entrySet()
                 .stream()
                 .sorted( Collections.reverseOrder(Map.Entry.comparingByValue()))
@@ -178,8 +179,8 @@ public abstract class GenericAlgorithm {
             String key = entry.getKey();
 
             float nextFrequency = allFoundPatterns.get( key );
-            float positiveFrequency = positiveFoundPatterns.get( key );
-            float negativeFrequency = negativeFoundPatterns.get( key );
+            int positiveFrequency = positiveFoundPatterns.get( key );
+            int negativeFrequency = negativeFoundPatterns.get( key );
 
             if(previousFrequency != nextFrequency){
                 previousFrequency = nextFrequency;
@@ -191,9 +192,9 @@ public abstract class GenericAlgorithm {
             else{
                 toPrint =
                         toPrint.concat( "[" + key +"]"
-                                + " " + String.format(printFormat, positiveFrequency)
-                                + " " + String.format(printFormat,  negativeFrequency)
-                                + " " + String.format(printFormat, nextFrequency ) + "\n");
+                                + " " + Integer.toString( positiveFrequency)
+                                + " " + Integer.toString( negativeFrequency)
+                                + " " + String.format(format, nextFrequency ) + "\n");
             }
         }
         return toPrint;
