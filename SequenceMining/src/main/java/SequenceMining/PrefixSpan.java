@@ -45,6 +45,14 @@ public class PrefixSpan extends GenericAlgorithm {
     }
 
     @Override
+    boolean isStillToBeExpanded ( Float totalSupport ) {
+        if( totalSupport < minSupport){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
         positiveFoundPatterns.put( pattern, patternSupportPositive);
         negativeFoundPatterns.put( pattern, patternSupportNegative );

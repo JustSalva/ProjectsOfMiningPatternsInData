@@ -7,15 +7,15 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toMap;
 
-public abstract class GenericAlgorithm {
+public abstract class GenericAlgorithm{
 
     protected Map<String, Integer> positiveFoundPatterns;
     protected Map<String, Integer> negativeFoundPatterns;
-    protected ArrayList<String> items; //The different items in the dataset
-    protected ArrayList< Transaction > transactions;
+    protected HashSet<String> items; //The different items in the dataset
+    protected HashMap< Integer, Transaction > transactions;
     protected Map<String, Float> allFoundPatterns;
     protected int kCounter;
-
+    private PriorityQueue<NodeToExpand> nodeToExpand;
     private int k;
 
     public GenericAlgorithm ( int k) {
@@ -24,6 +24,8 @@ public abstract class GenericAlgorithm {
         this.k = k;
         this.allFoundPatterns = new HashMap <>();
         this.kCounter = 0;
+        this.nodeToExpand = new PriorityQueue <>();
+        this.transactions = new HashMap <>();
     }
 
     public String start(String filepathPositive, String filepathNegative, int numberOfDecimals){
@@ -36,22 +38,25 @@ public abstract class GenericAlgorithm {
 
         Dataset dataset = new Dataset( filePathPositive, true );
         HashSet<String> positiveItems = dataset.getItems();
-        this.transactions = dataset.getTransactions();
+        ArrayList < Transaction > transactions = dataset.getTransactions();
 
         dataset = new Dataset( filePathNegative , false );
         transactions.addAll( dataset.getTransactions() );
+        for( int i=0; i < transactions.size(); i++ ){
+            this.transactions.put( i, transactions.get( i ) );
+        }
 
         joinItems( positiveItems, dataset.getItems() );
     }
 
     protected void joinItems(HashSet<String> positiveItems, HashSet<String> negativeItems){
         positiveItems.addAll( negativeItems );
-        this.items = new ArrayList <>( positiveItems );
-        Collections.sort( this.items );
+        this.items = positiveItems;
+        //Collections.sort( this.items );
     }
 
     public void start(){
-        HashMap< String, HashMap<Integer, IterationState>> firstRecursionNodes = new HashMap <>();
+        //HashMap< String, HashMap<Integer, IterationState>> firstRecursionNodes = new HashMap <>();
         HashMap<Integer, IterationState> transactionStartingPosition;
         IterationState iterationState;
         int position;
@@ -77,58 +82,79 @@ public abstract class GenericAlgorithm {
                 }
             }
             addToPatternList( item, patternSupportPositive, patternSupportNegative);
-            if(constraintsAreMetInFirstLevel(item, patternSupportPositive, patternSupportNegative)) {
-                firstRecursionNodes.put( item, transactionStartingPosition );
 
+            if(constraintsAreMetInFirstLevel(item, patternSupportPositive, patternSupportNegative)) {
+                nodeToExpand.add( new NodeToExpand( item, transactionStartingPosition, allFoundPatterns.get( item ) ) );
             }
 
         }
-        for(String pattern: firstRecursionNodes.keySet()){
-            start( pattern, firstRecursionNodes.get( pattern ) );
+        int lenght = nodeToExpand.size();
+        for(int i= 0; i<lenght; i++){
+            NodeToExpand nextNode = nodeToExpand.poll();
+            start( nextNode.getPattern(), nextNode.getTransactionStartingPosition() , new HashSet <>( this.items ));
         }
+
+
 
     }
 
-    public void start(String pattern, HashMap<Integer, IterationState> transactionStartingPosition){
+    public void start(String pattern, HashMap<Integer, IterationState> transactionStartingPosition, HashSet<String> items){
         HashMap<Integer, IterationState> newTransactionStartingPosition;
+
         IterationState iterationState;
         int position;
-        for(String item : items){
-            Integer patternSupportPositive = 0;
-            Integer patternSupportNegative = 0;
-            newTransactionStartingPosition = new HashMap <>();
+        boolean itemFound;
+        if(isStillToBeExpanded( allFoundPatterns.get( pattern ) )){
+            HashSet<String> newItems = new HashSet <>( items );
+            for(String item : items){
+                Integer patternSupportPositive = 0;
+                Integer patternSupportNegative = 0;
+                newTransactionStartingPosition = new HashMap <>();
+                itemFound = false;
+                for(int transactionNumber : transactionStartingPosition.keySet()){
 
-            for(int transactionNumber : transactionStartingPosition.keySet()){
-
-                try {
-                    position =
-                            transactions.get( transactionNumber ).getPosition(
-                                    transactionStartingPosition.get( transactionNumber )
-                                            .getLastTransactionIndexPerSymbol( item ) , item , transactionStartingPosition.get( transactionNumber ).getIndexForDirectAccess());
-                    if(position <= transactionStartingPosition.get( transactionNumber ).getIndexForDirectAccess()){
+                    try {
+                        position =
+                                transactions.get( transactionNumber ).getPosition(
+                                        transactionStartingPosition.get( transactionNumber )
+                                                .getLastTransactionIndexPerSymbol( item ) , item , transactionStartingPosition.get( transactionNumber ).getIndexForDirectAccess());
+                        if(position <= transactionStartingPosition.get( transactionNumber ).getIndexForDirectAccess()){
+                            continue;
+                        }
+                        iterationState = new IterationState( transactionStartingPosition.get( transactionNumber ) );
+                        iterationState.addLastTransactionIndexPerSymbol( item,  position,
+                                transactions.get( transactionNumber ).getElementMapping( item ));
+                        newTransactionStartingPosition.put( transactionNumber, iterationState );
+                        if(transactions.get( transactionNumber ).isPositive()){
+                            patternSupportPositive ++;
+                        }else{
+                            patternSupportNegative ++;
+                        }
+                        itemFound = true;
+                    } catch ( NotPresentSymbolException e ) {
                         continue;
                     }
-                    iterationState = new IterationState( transactionStartingPosition.get( transactionNumber ) );
-                    iterationState.addLastTransactionIndexPerSymbol( item,  position,
-                            transactions.get( transactionNumber ).getElementMapping( item ));
-                    newTransactionStartingPosition.put( transactionNumber, iterationState );
-                    if(transactions.get( transactionNumber ).isPositive()){
-                        patternSupportPositive ++;
-                    }else{
-                        patternSupportNegative ++;
-                    }
-                } catch ( NotPresentSymbolException e ) {
-                    continue;
                 }
-            }
-            if( patternSupportPositive > 0 || patternSupportNegative >0 ){
-                String temp = pattern.concat( ", " + item );
-                addToPatternList( temp, patternSupportPositive, patternSupportNegative);
-                if(constraintsAreMet(pattern, temp, patternSupportPositive, patternSupportNegative)) {
-                    start( pattern.concat( ", " + item ), newTransactionStartingPosition);
+                if(itemFound == false){
+                    newItems.remove( item );
                 }
-            }
+                if( patternSupportPositive > 0 || patternSupportNegative >0 ){
+                    String temp = pattern.concat( ", " + item );
+                    addToPatternList( temp, patternSupportPositive, patternSupportNegative);
+                    if(constraintsAreMet(pattern, temp, patternSupportPositive, patternSupportNegative)) {
+                        nodeToExpand.add( new NodeToExpand( temp, newTransactionStartingPosition,
+                                allFoundPatterns.get( temp ) ) );
+                        if(!nodeToExpand.isEmpty()){
+                            NodeToExpand nextNode = nodeToExpand.poll();
 
+                            start( nextNode.getPattern(), nextNode.getTransactionStartingPosition(),
+                                    new HashSet <>( newItems ) );
+                        }
+
+                    }
+                }
+
+            }
         }
     }
 
@@ -160,7 +186,7 @@ public abstract class GenericAlgorithm {
     abstract void addMinElement(String pattern, Integer patternSupportPositive, Integer patternSupportNegative);
     abstract boolean checkConstraints(String fatherPattern, String pattern, Integer patternSupportPositive,
                                       Integer patternSupportNegative);
-
+    abstract boolean isStillToBeExpanded(Float score);
 
     abstract void addToPatternList(String pattern, Integer patternSupportPositive, Integer patternSupportNegative);
 

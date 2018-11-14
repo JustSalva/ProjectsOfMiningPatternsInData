@@ -2,11 +2,12 @@ package SequenceMining;
 
 import SequenceMining.DataSet.Dataset;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-public class SupervisedSequenceMining extends GenericAlgorithm {
+public class SupervisedSequenceMining extends GenericAlgorithm{
     private int P;
     private int N;
     private float WEIGHT;
@@ -29,10 +30,13 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
 
         Dataset dataset = new Dataset( filePathPositive, true );
         HashSet<String> positiveItems = dataset.getItems();
-        this.transactions = dataset.getTransactions();
+        ArrayList<Transaction> transactions = dataset.getTransactions();
         this.P = transactions.size();
         dataset = new Dataset( filePathNegative , false );
         transactions.addAll( dataset.getTransactions() );
+        for( int i=0; i < transactions.size(); i++ ){
+            this.transactions.put( i, transactions.get( i ) );
+        }
         this.N = transactions.size() - P;
         this.WEIGHT = ( ( (float)P/(float)(N+P) ) * (float)N/(float)(N+P) );
         this.SQUARED_N_PLUS_P = (N+P)*(N+P);
@@ -71,9 +75,15 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
         return checkConstraints( respectsLowerBounds, respectsUpperBounds, pattern);
 
     }
+
+    @Override
+    boolean isStillToBeExpanded ( Float score ) {
+        return true;
+    }
+
     boolean checkConstraints ( boolean respectsLowerBounds, boolean respectsUpperBounds, String pattern) {
         float wracc = allFoundPatterns.get( pattern );
-        if( !(respectsLowerBounds && respectsUpperBounds )){
+        if( !(respectsLowerBounds )){
             return false;
         }else if(wracc > minWracc && !maxValuesOfK.contains( wracc )){
             maxValuesOfK.pollLast();
