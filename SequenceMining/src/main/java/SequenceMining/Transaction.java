@@ -7,32 +7,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Transaction {
-    private Map<String, ArrayList<Integer> > transactionMapping;
+    private Map<String, HashMap<Integer, Integer> > transactionMapping;
+    private Map<String, Integer> nextElementKeyInMapping;
     private int transactionLength;
     private boolean isPositive;
 
     public Transaction ( boolean isPositive ) {
         this.transactionMapping = new HashMap <>();
+        this.nextElementKeyInMapping = new HashMap <>();
         this.transactionLength = 0;
         this.isPositive = isPositive;
     }
 
-    public Map < String, ArrayList < Integer > > getTransactionMapping () {
+    public Map < String, HashMap<Integer, Integer> > getTransactionMapping () {
         return transactionMapping;
     }
 
     public void addTransactionMapping ( String element, int position ) {
-        ArrayList<Integer> tempList;
+        HashMap<Integer, Integer> tempList;
         if(transactionMapping.containsKey( element )){
             tempList = transactionMapping.get( element );
-            tempList.add( position );
+            int tempPosition = nextElementKeyInMapping.remove( element ) ;
+            tempList.put(tempPosition, position );
+            nextElementKeyInMapping.put( element, tempPosition +1);
         }
         else{
-            tempList = new ArrayList <>();
-            tempList.add( position );
+            tempList = new HashMap<>();
+            tempList.put(0, position );
+            nextElementKeyInMapping.put( element, 1);
             transactionMapping.put( element, tempList );
         }
         this.transactionLength ++;
+    }
+
+    public void flushInitializationSupportStructures(){
+        this.nextElementKeyInMapping = null;
     }
 
     public int getTransactionLength () {
@@ -60,8 +69,8 @@ public class Transaction {
         }
 
     }
-    public  ArrayList<Integer> getElementMapping (String element) throws NotPresentSymbolException{
-        ArrayList<Integer> temp = transactionMapping.get( element );
+    public  HashMap<Integer, Integer>  getElementMapping (String element) throws NotPresentSymbolException{
+        HashMap<Integer, Integer> temp = transactionMapping.get( element );
         if( temp != null){
             return temp;
         }

@@ -38,14 +38,14 @@ public class IterationState {
     }
 
     public void addLastTransactionIndexPerSymbol ( String symbol, Integer position,
-                                                   ArrayList<Integer> elementPositions ) {
+                                                   HashMap<Integer, Integer>  elementPositions ) {
         if(lastTransactionIndexPerSymbol.containsKey( symbol )){
             int previousPosition = lastTransactionIndexPerSymbol.get( symbol );
             this.lastTransactionIndexPerSymbol.put( symbol, previousPosition + 1 );
         }else{
             int i = 1;
-            for( Integer element: elementPositions){
-                if ( !element.equals( position ) ){
+            for( Integer element: elementPositions.keySet()){
+                if ( !elementPositions.get( element ).equals( position ) ){
                     i++;
                 }else{
                     break;

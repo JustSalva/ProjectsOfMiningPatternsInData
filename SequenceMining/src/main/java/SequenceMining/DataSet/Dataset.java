@@ -6,16 +6,17 @@ import SequenceMining.Transaction;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
+
+import static java.util.stream.Collectors.toMap;
 
 
 public class Dataset {
-    private HashSet<String>  items; //The different items in the dataset
+    private LinkedHashMap<String, Integer> items; //The different items in the dataset
     private ArrayList< Transaction > transactions;
 
     public Dataset ( String filePath, boolean isPositive) {
-        items = new HashSet<>();
+        items = new LinkedHashMap <>();
         transactions = new ArrayList<>();
         try {
             Transaction currentTransaction = new Transaction(isPositive);
@@ -27,12 +28,18 @@ public class Dataset {
                 String line = reader.readLine();
                 if (line.equals( "") ){
                     transactions.add( currentTransaction );
+                    currentTransaction.flushInitializationSupportStructures();
                     currentTransaction = new Transaction(isPositive);
                     i = 0;
                 }else{
                     tempElement = line.split( " ")[0];
                     currentTransaction.addTransactionMapping(tempElement ,i );
-                    items.add(tempElement);
+                    if(items.containsValue( tempElement )){
+                        int temp = items.get( tempElement );
+                        items.put( tempElement, temp+1 );
+                    }else{
+                        items.put( tempElement, 1 );
+                    }
                     i++;
                 }
             }
@@ -42,9 +49,10 @@ public class Dataset {
             System.err.println("Unable to read dataset file!");
             e.printStackTrace();
         }
+        LinkedHashMap<String, Integer> ordered  = items.entrySet().stream().sorted( Collections.reverseOrder(Map.Entry.comparingByValue())).collect( toMap( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2) -> e2, LinkedHashMap::new));
     }
 
-    public HashSet<String> getItems () {
+    public LinkedHashMap<String, Integer> getItems () {
         return items;
     }
 

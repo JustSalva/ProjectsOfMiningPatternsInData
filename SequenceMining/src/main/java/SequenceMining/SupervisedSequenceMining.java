@@ -2,10 +2,7 @@ package SequenceMining;
 
 import SequenceMining.DataSet.Dataset;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class SupervisedSequenceMining extends GenericAlgorithm{
     private int P;
@@ -29,7 +26,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
     protected void initializeDataset(String filePathPositive, String filePathNegative){
 
         Dataset dataset = new Dataset( filePathPositive, true );
-        HashSet<String> positiveItems = dataset.getItems();
+        LinkedHashMap<String, Integer> positiveItems = dataset.getItems();
         ArrayList<Transaction> transactions = dataset.getTransactions();
         this.P = transactions.size();
         dataset = new Dataset( filePathNegative , false );

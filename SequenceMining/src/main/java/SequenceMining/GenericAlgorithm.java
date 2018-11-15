@@ -11,7 +11,7 @@ public abstract class GenericAlgorithm{
 
     protected Map<String, Integer> positiveFoundPatterns;
     protected Map<String, Integer> negativeFoundPatterns;
-    protected HashSet<String> items; //The different items in the dataset
+    protected LinkedHashMap<String, Integer> items; //The different items in the dataset
     protected HashMap< Integer, Transaction > transactions;
     protected Map<String, Float> allFoundPatterns;
     protected int kCounter;
@@ -37,7 +37,7 @@ public abstract class GenericAlgorithm{
     protected void initializeDataset(String filePathPositive, String filePathNegative){
 
         Dataset dataset = new Dataset( filePathPositive, true );
-        HashSet<String> positiveItems = dataset.getItems();
+        LinkedHashMap<String, Integer> positiveItems = dataset.getItems();
         ArrayList < Transaction > transactions = dataset.getTransactions();
 
         dataset = new Dataset( filePathNegative , false );
@@ -49,10 +49,18 @@ public abstract class GenericAlgorithm{
         joinItems( positiveItems, dataset.getItems() );
     }
 
-    protected void joinItems(HashSet<String> positiveItems, HashSet<String> negativeItems){
-        positiveItems.addAll( negativeItems );
-        this.items = positiveItems;
-        //Collections.sort( this.items );
+    protected void joinItems(LinkedHashMap<String, Integer> positiveItems, LinkedHashMap<String, Integer> negativeItems){
+        for( Map.Entry<String, Integer> entry : negativeItems.entrySet() ){
+            if(positiveItems.containsKey( entry.getKey() )){
+                int temp = positiveItems.get( entry.getKey() );
+                positiveItems.put( entry.getKey(), temp+entry.getValue() );
+            }else{
+                positiveItems.put( entry.getKey(), entry.getValue() );
+            }
+        }
+        this.items = positiveItems.entrySet().stream()
+                .sorted( Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect( toMap( Map.Entry::getKey, Map.Entry::getValue, ( e1, e2) -> e2, LinkedHashMap::new));
     }
 
     public void start(){
@@ -60,7 +68,8 @@ public abstract class GenericAlgorithm{
         HashMap<Integer, IterationState> transactionStartingPosition;
         IterationState iterationState;
         int position;
-        for(String item : items){
+        HashSet<String> newItems = new HashSet <>();
+        for(String item: items.keySet()){
             int patternSupportPositive = 0;
             int patternSupportNegative = 0;
             transactionStartingPosition = new HashMap <>();
@@ -85,13 +94,21 @@ public abstract class GenericAlgorithm{
 
             if(constraintsAreMetInFirstLevel(item, patternSupportPositive, patternSupportNegative)) {
                 nodeToExpand.add( new NodeToExpand( item, transactionStartingPosition, allFoundPatterns.get( item ) ) );
+                newItems.add( item );
             }
 
         }
-        int lenght = nodeToExpand.size();
-        for(int i= 0; i<lenght; i++){
+        HashSet<String> finalItems = new HashSet <>();
+        for(String item: newItems){
+           if(isStillToBeExpanded( allFoundPatterns.get( item ))){
+               finalItems.add( item );
+           }
+        }
+
+        int length = nodeToExpand.size();
+        for(int i= 0; i<length; i++){
             NodeToExpand nextNode = nodeToExpand.poll();
-            start( nextNode.getPattern(), nextNode.getTransactionStartingPosition() , new HashSet <>( this.items ));
+            start( nextNode.getPattern(), nextNode.getTransactionStartingPosition() , finalItems);
         }
 
 
