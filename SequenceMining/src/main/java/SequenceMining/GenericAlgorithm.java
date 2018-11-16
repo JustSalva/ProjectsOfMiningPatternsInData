@@ -9,14 +9,14 @@ import static java.util.stream.Collectors.toMap;
 
 public abstract class GenericAlgorithm{
 
-    protected Map<String, Integer> positiveFoundPatterns;
-    protected Map<String, Integer> negativeFoundPatterns;
-    protected LinkedHashMap<String, Integer> items; //The different items in the dataset
-    protected HashMap< Integer, Transaction > transactions;
-    protected Map<String, Float> allFoundPatterns;
-    protected int kCounter;
+    Map<String, Integer> positiveFoundPatterns;
+    Map<String, Integer> negativeFoundPatterns;
+    private LinkedHashMap<String, Integer> items; //The different items in the dataset
+    HashMap< Integer, Transaction > transactions;
+    Map<String, Float> allFoundPatterns;
+    int kCounter;
     private PriorityQueue<NodeToExpand> nodeToExpand;
-    private int k;
+    int k;
 
     public GenericAlgorithm ( int k) {
         this.positiveFoundPatterns = new HashMap <>();
@@ -90,7 +90,7 @@ public abstract class GenericAlgorithm{
                     continue;
                 }
             }
-            addToPatternList( item, patternSupportPositive, patternSupportNegative);
+            addToPatternList( item, patternSupportPositive, patternSupportNegative, transactionStartingPosition);
 
             if(constraintsAreMetInFirstLevel(item, patternSupportPositive, patternSupportNegative)) {
                 nodeToExpand.add( new NodeToExpand( item, transactionStartingPosition, allFoundPatterns.get( item ) ) );
@@ -157,7 +157,7 @@ public abstract class GenericAlgorithm{
                 }
                 if( patternSupportPositive > 0 || patternSupportNegative >0 ){
                     String temp = pattern.concat( ", " + item );
-                    addToPatternList( temp, patternSupportPositive, patternSupportNegative);
+                    addToPatternList( temp, patternSupportPositive, patternSupportNegative, newTransactionStartingPosition);
                     if(constraintsAreMet(pattern, temp, patternSupportPositive, patternSupportNegative)) {
                         nodeToExpand.add( new NodeToExpand( temp, newTransactionStartingPosition,
                                 allFoundPatterns.get( temp ) ) );
@@ -205,7 +205,8 @@ public abstract class GenericAlgorithm{
                                       Integer patternSupportNegative);
     abstract boolean isStillToBeExpanded(Float score);
 
-    abstract void addToPatternList(String pattern, Integer patternSupportPositive, Integer patternSupportNegative);
+    abstract void addToPatternList(String pattern, Integer patternSupportPositive, Integer patternSupportNegative,
+                                   HashMap<Integer, IterationState> transactionStartingPosition);
 
 
     public String printResults(int numberOfDecimals){

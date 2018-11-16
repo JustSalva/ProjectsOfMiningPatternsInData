@@ -110,7 +110,8 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
 
 
     @Override
-    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
+    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative,
+                            HashMap<Integer, IterationState> transactionStartingPosition) {
         positiveFoundPatterns.put( pattern, patternSupportPositive);
         negativeFoundPatterns.put( pattern, patternSupportNegative );
         allFoundPatterns.put( pattern,
