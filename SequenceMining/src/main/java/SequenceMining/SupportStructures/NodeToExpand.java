@@ -1,12 +1,23 @@
-package SequenceMining;
+package SequenceMining.SupportStructures;
 
 import java.util.HashMap;
-import java.util.Objects;
 
+/**
+ * This class describe a pattern's node to be expanded, when it is contained in
+ * the priority queue of nodes to be expanded later
+ */
 public class NodeToExpand implements Comparable<NodeToExpand>{
 
     private String pattern;
+
+    /**
+     * Projected database of the node
+     */
     private HashMap<Integer, IterationState> transactionStartingPosition;
+
+    /**
+     * Evaluation function's value of the pattern
+     */
     private Float nodeValue;
 
     public NodeToExpand ( String pattern, HashMap < Integer, IterationState > transactionStartingPosition, Float nodeValue ) {

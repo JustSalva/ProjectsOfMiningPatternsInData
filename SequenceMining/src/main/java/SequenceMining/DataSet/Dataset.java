@@ -1,7 +1,7 @@
 package SequenceMining.DataSet;
 
 
-import SequenceMining.Transaction;
+import SequenceMining.SupportStructures.Transaction;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

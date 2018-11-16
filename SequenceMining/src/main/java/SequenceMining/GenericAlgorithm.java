@@ -2,6 +2,9 @@ package SequenceMining;
 
 import SequenceMining.DataSet.Dataset;
 import SequenceMining.Exceptions.NotPresentSymbolException;
+import SequenceMining.SupportStructures.IterationState;
+import SequenceMining.SupportStructures.NodeToExpand;
+import SequenceMining.SupportStructures.Transaction;
 
 import java.util.*;
 
@@ -387,32 +390,16 @@ public abstract class GenericAlgorithm {
         return positiveFoundPatterns;
     }
 
-    public void setPositiveFoundPatterns ( Map < String, Integer > positiveFoundPatterns ) {
-        this.positiveFoundPatterns = positiveFoundPatterns;
-    }
-
     public Map < String, Integer > getNegativeFoundPatterns () {
         return negativeFoundPatterns;
-    }
-
-    public void setNegativeFoundPatterns ( Map < String, Integer > negativeFoundPatterns ) {
-        this.negativeFoundPatterns = negativeFoundPatterns;
     }
 
     public HashMap < Integer, Transaction > getTransactions () {
         return transactions;
     }
 
-    public void setTransactions ( HashMap < Integer, Transaction > transactions ) {
-        this.transactions = transactions;
-    }
-
     public Map < String, Float > getAllFoundPatterns () {
         return allFoundPatterns;
-    }
-
-    public void setAllFoundPatterns ( Map < String, Float > allFoundPatterns ) {
-        this.allFoundPatterns = allFoundPatterns;
     }
 
 

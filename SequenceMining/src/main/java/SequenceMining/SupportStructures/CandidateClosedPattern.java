@@ -1,5 +1,9 @@
-package SequenceMining;
+package SequenceMining.SupportStructures;
 
+/**
+ * This class represents a pattern that might be closed but must be checked
+ * Used to contains all the useful info during the checking process
+ */
 public class CandidateClosedPattern {
     private int positiveSupport;
     private int negativeSupport;
@@ -23,7 +27,7 @@ public class CandidateClosedPattern {
         return pattern;
     }
 
-    public int patternLength(){
+    public int patternLength () {
         return pattern.length();
     }
 }

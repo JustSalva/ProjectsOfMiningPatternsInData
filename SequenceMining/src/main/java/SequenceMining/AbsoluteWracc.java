@@ -1,5 +1,7 @@
 package SequenceMining;
 
+import SequenceMining.SupportStructures.CandidateClosedPattern;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,12 +21,12 @@ public class AbsoluteWracc extends SupervisedClosedSequenceMining {
 
     @Override
     boolean lowerBoundConstraints ( int p, int n ) {
-        return p >= minP || n >= minN;
+        return p >= getMinP() || n >= minN;
     }
     @Override
     void computeConstraintConstants(){
         super.computeConstraintConstants();
-        this.minN = minWracc * SQUARED_N_PLUS_P_DIVIDED_BY_P;
+        this.minN = getMinWracc() * SQUARED_N_PLUS_P_DIVIDED_BY_P;
     }
 
     @Override
