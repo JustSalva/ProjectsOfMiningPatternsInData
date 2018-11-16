@@ -12,8 +12,8 @@ public class AbsoluteWracc extends SupervisedClosedSequenceMining {
     }
 
     @Override
-    protected void initializeDataset ( String filePathPositive, String filePathNegative ) {
-        super.initializeDataset( filePathPositive, filePathNegative );
+    protected void initializeDataSet ( String filePathPositive, String filePathNegative ) {
+        super.initializeDataSet( filePathPositive, filePathNegative );
         this.SQUARED_N_PLUS_P_DIVIDED_BY_P = SQUARED_N_PLUS_P / (float)P;
     }
 

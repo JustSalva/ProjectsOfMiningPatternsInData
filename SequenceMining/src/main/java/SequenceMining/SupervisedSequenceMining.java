@@ -20,7 +20,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
     }
 
     @Override
-    protected void initializeDataset(String filePathPositive, String filePathNegative){
+    protected void initializeDataSet ( String filePathPositive, String filePathNegative){
 
         Dataset dataset = new Dataset( filePathPositive, true );
         LinkedHashMap<String, Integer> positiveItems = dataset.getItems();
@@ -29,7 +29,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
         dataset = new Dataset( filePathNegative , false );
         transactions.addAll( dataset.getTransactions() );
         for( int i=0; i < transactions.size(); i++ ){
-            this.transactions.put( i, transactions.get( i ) );
+            this.getTransactions().put( i, transactions.get( i ) );
         }
         this.N = transactions.size() - P;
         this.WEIGHT = ( ( (float)P/(float)(N+P) ) * (float)N/(float)(N+P) );
@@ -49,7 +49,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
     @Override
     void addMinElement ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
 
-        float totalSupport = allFoundPatterns.get( pattern );
+        float totalSupport = getAllFoundPatterns().get( pattern );
         if( !maxValuesOfK.contains( totalSupport )){
             super.kCounter++;
             maxValuesOfK.add( totalSupport );
@@ -71,7 +71,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
     }
 
     boolean checkConstraints ( boolean respectsLowerBounds, String pattern) {
-        float wracc = allFoundPatterns.get( pattern );
+        float wracc = getAllFoundPatterns().get( pattern );
         if( !(respectsLowerBounds )){
             return false;
         }else if(wracc > minWracc && !maxValuesOfK.contains( wracc )){
@@ -94,9 +94,9 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
 
     @Override
     void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
-        positiveFoundPatterns.put( pattern, patternSupportPositive);
-        negativeFoundPatterns.put( pattern, patternSupportNegative );
-        allFoundPatterns.put( pattern, computeEvaluationFunction(patternSupportPositive, patternSupportNegative));
+        getPositiveFoundPatterns().put( pattern, patternSupportPositive);
+        getNegativeFoundPatterns().put( pattern, patternSupportNegative );
+        getAllFoundPatterns().put( pattern, computeEvaluationFunction(patternSupportPositive, patternSupportNegative));
     }
 
     float computeEvaluationFunction( Integer patternSupportPositive, Integer patternSupportNegative){

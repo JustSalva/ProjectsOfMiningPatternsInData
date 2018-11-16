@@ -25,7 +25,7 @@ public class SupervisedClosedSequenceMining extends SupervisedSequenceMining {
     @Override
     public String printResults(int numberOfDecimals){
         String format = "%." + Integer.toString( numberOfDecimals ) + "f";
-        LinkedHashMap<String, Float> result = allFoundPatterns.entrySet()
+        LinkedHashMap<String, Float> result = getAllFoundPatterns().entrySet()
                 .stream()
                 .sorted( Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .collect( toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
@@ -37,7 +37,7 @@ public class SupervisedClosedSequenceMining extends SupervisedSequenceMining {
         ArrayList<CandidateClosedPattern> tempPatternList = new ArrayList <>();
         for(Map.Entry<String, Float> entry : result.entrySet()){
             String key = entry.getKey();
-            float nextFrequency = allFoundPatterns.get( key );
+            float nextFrequency = getAllFoundPatterns().get( key );
             if(previousFrequency != nextFrequency){
                 previousFrequency = nextFrequency;
                 counter++;
@@ -45,8 +45,8 @@ public class SupervisedClosedSequenceMining extends SupervisedSequenceMining {
                 tempPatternList.clear();
 
             }
-            tempPatternList.add( new CandidateClosedPattern( positiveFoundPatterns.get( key ),
-                    negativeFoundPatterns.get( key ), key ));
+            tempPatternList.add( new CandidateClosedPattern( getPositiveFoundPatterns().get( key ),
+                    getNegativeFoundPatterns().get( key ), key ));
 
             if (counter > super.k){
                 break;
@@ -54,7 +54,7 @@ public class SupervisedClosedSequenceMining extends SupervisedSequenceMining {
         }
 
         for(CandidateClosedPattern pattern: closedPatternsList){
-            float nextFrequency = allFoundPatterns.get( pattern.getPattern() );
+            float nextFrequency = getAllFoundPatterns().get( pattern.getPattern() );
             int positiveFrequency = pattern.getPositiveSupport();
             int negativeFrequency = pattern.getNegativeSupport();
             toPrint =
