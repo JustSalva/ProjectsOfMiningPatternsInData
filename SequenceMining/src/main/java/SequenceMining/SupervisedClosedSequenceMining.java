@@ -2,6 +2,7 @@ package SequenceMining;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -15,10 +16,9 @@ public class SupervisedClosedSequenceMining extends SupervisedSequenceMining {
     }
 
     @Override
-    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative,
-                            HashMap< Integer, IterationState > transactionStartingPosition ) {
-        super.addToPatternList( pattern, patternSupportPositive, patternSupportNegative, transactionStartingPosition );
-        closedItemsIterationStates.put( pattern,  transactionStartingPosition);
+    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative) {
+        super.addToPatternList( pattern, patternSupportPositive, patternSupportNegative );
+        //closedItemsIterationStates.put( pattern,  transactionStartingPosition);
 
     }
 
@@ -33,40 +33,32 @@ public class SupervisedClosedSequenceMining extends SupervisedSequenceMining {
         int counter = 0;
         float previousFrequency = 0;
         String toPrint = "";
-        HashMap<Integer, String> closedItems = new HashMap <>();
-        ArrayList<String> closedPatternsList = new ArrayList <>();
+        ArrayList<CandidateClosedPattern> closedPatternsList = new ArrayList <>();
+        ArrayList<CandidateClosedPattern> tempPatternList = new ArrayList <>();
         for(Map.Entry<String, Float> entry : result.entrySet()){
             String key = entry.getKey();
             float nextFrequency = allFoundPatterns.get( key );
             if(previousFrequency != nextFrequency){
                 previousFrequency = nextFrequency;
                 counter++;
-                closedPatternsList.addAll( closedItems.values());
-                closedItems = new HashMap <>();
+                closedPatternsList.addAll( extractClosedItems( tempPatternList ) );
+                tempPatternList.clear();
 
             }
-            int closeValue = computeCloseValue( key );
-
-            if(closedItems.containsKey( closeValue )){
-               String oldPattern = closedItems.get( closeValue );
-               if(key.length() > oldPattern.length() ){
-                   closedItems.put( closeValue, key );
-               }
-            }else{
-                closedItems.put( closeValue, key );
-            }
+            tempPatternList.add( new CandidateClosedPattern( positiveFoundPatterns.get( key ),
+                    negativeFoundPatterns.get( key ), key ));
 
             if (counter > super.k){
                 break;
             }
         }
 
-        for(String pattern: closedPatternsList){
-            float nextFrequency = allFoundPatterns.get( pattern );
-            int positiveFrequency = positiveFoundPatterns.get( pattern );
-            int negativeFrequency = negativeFoundPatterns.get( pattern );
+        for(CandidateClosedPattern pattern: closedPatternsList){
+            float nextFrequency = allFoundPatterns.get( pattern.getPattern() );
+            int positiveFrequency = pattern.getPositiveSupport();
+            int negativeFrequency = pattern.getNegativeSupport();
             toPrint =
-                    toPrint.concat( "[" + pattern +"]"
+                    toPrint.concat( "[" + pattern.getPattern() +"]"
                             + " " + Integer.toString( positiveFrequency)
                             + " " + Integer.toString( negativeFrequency)
                             + " " + String.format(format, nextFrequency ) + "\n");
@@ -75,22 +67,52 @@ public class SupervisedClosedSequenceMining extends SupervisedSequenceMining {
 
     }
 
-    private Integer computeCloseValue( String pattern ){
-        HashMap< Integer, IterationState > transactionStates= closedItemsIterationStates.get( pattern );
-        //int cardinality = computeCardinality(transactionStates);
-        int finalValue = 0;
-        for( Map.Entry<Integer,IterationState> iterationStateEntry: transactionStates.entrySet()){
-
-            finalValue += transactions.get( iterationStateEntry.getKey() ).getTransactionLength() - iterationStateEntry.getValue().getIndexForDirectAccess() + 1;
+    ArrayList<CandidateClosedPattern> extractClosedItems(ArrayList<CandidateClosedPattern> candidates){
+        if(candidates.size() > 1){
+            candidates = candidates
+                    .stream()
+                    .sorted(Comparator.comparingInt(CandidateClosedPattern::patternLength))
+                    .collect( Collectors.toCollection(ArrayList::new));
+            return recursivelyExtractClosedItems( candidates );
         }
-        return finalValue;
+        return candidates;
+
     }
 
-    private int computeCardinality( HashMap< Integer, IterationState > transactionStates ){
-        return transactionStates.size();
+    private ArrayList<CandidateClosedPattern> recursivelyExtractClosedItems(ArrayList<CandidateClosedPattern> candidates){
+        boolean match = false;
+        CandidateClosedPattern checkedElement = candidates.remove( 0 );
+        if(candidates.isEmpty()){
+            candidates.add( checkedElement );
+            return candidates;
+        }
+        for(CandidateClosedPattern element: candidates){
+            if(patternsMatch( checkedElement, element )){
+                match = true;
+                break;
+            }
+        }
+        if(match){
+            return recursivelyExtractClosedItems( candidates );
+        }else{
+            ArrayList<CandidateClosedPattern> toReturn = recursivelyExtractClosedItems( candidates );
+            toReturn.add( checkedElement );
+            return toReturn;
+        }
     }
 
-
+    private boolean patternsMatch( CandidateClosedPattern shorterElement, CandidateClosedPattern longerElement){
+        int lastMatchPosition = -1;
+        int matchPosition;
+        for(String item: shorterElement.getPattern().split( ", " )){
+            matchPosition = longerElement.getPattern().indexOf( item, lastMatchPosition+1);
+            if( !(matchPosition > lastMatchPosition)){
+                return false;
+            }
+            lastMatchPosition = matchPosition;
+        }
+        return true;
+    }
 
     public static void main( String[] args) {
         if(args.length != 3) System.out.println("Incorrect number of arguments! Aborting execution.");

@@ -5,17 +5,14 @@ import SequenceMining.DataSet.Dataset;
 import java.util.*;
 
 public class SupervisedSequenceMining extends GenericAlgorithm{
-    private int P;
+    int P;
     private int N;
     private float WEIGHT;
     private TreeSet<Float> maxValuesOfK;
-    private float minWracc;
-    private float minP;
-    private float SQUARED_N_PLUS_P;
+    float minWracc;
+    float minP;
+    float SQUARED_N_PLUS_P;
     private float SQUARED_N_PLUS_P_DIVIDED_BY_N;
-    private float INVERSE_P;
-    private float minWracc_times_SQUARED_N_PLUS_P;
-    //private float minN;
 
     public SupervisedSequenceMining ( int k ) {
         super( k );
@@ -37,16 +34,16 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
         this.N = transactions.size() - P;
         this.WEIGHT = ( ( (float)P/(float)(N+P) ) * (float)N/(float)(N+P) );
         this.SQUARED_N_PLUS_P = (N+P)*(N+P);
-        this.INVERSE_P = 1.0f/(float)P;
         this.SQUARED_N_PLUS_P_DIVIDED_BY_N = SQUARED_N_PLUS_P / (float)N;
+
+
         joinItems( positiveItems, dataset.getItems() );
     }
 
     @Override
     boolean checkConstraintsInFirstLevel ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
-        boolean respectsUpperBounds = upperBoundConstraints( P,N,patternSupportPositive, patternSupportNegative );
         boolean respectsLowerBounds = lowerBoundConstraints( patternSupportPositive, patternSupportNegative );
-        return checkConstraints( respectsLowerBounds, respectsUpperBounds, pattern);
+        return checkConstraints( respectsLowerBounds, pattern);
     }
 
     @Override
@@ -63,13 +60,8 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
 
     @Override
     boolean checkConstraints ( String fatherPattern, String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
-
-        boolean respectsUpperBounds = upperBoundConstraints( positiveFoundPatterns.get( fatherPattern ),
-                                                                negativeFoundPatterns.get( fatherPattern ),
-                                                                patternSupportPositive,
-                                                                patternSupportNegative );
         boolean respectsLowerBounds = lowerBoundConstraints( patternSupportPositive, patternSupportNegative );
-        return checkConstraints( respectsLowerBounds, respectsUpperBounds, pattern);
+        return checkConstraints( respectsLowerBounds, pattern);
 
     }
 
@@ -78,7 +70,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
         return true;
     }
 
-    boolean checkConstraints ( boolean respectsLowerBounds, boolean respectsUpperBounds, String pattern) {
+    boolean checkConstraints ( boolean respectsLowerBounds, String pattern) {
         float wracc = allFoundPatterns.get( pattern );
         if( !(respectsLowerBounds )){
             return false;
@@ -91,33 +83,25 @@ public class SupervisedSequenceMining extends GenericAlgorithm{
         }
         return true;
     }
-
-
-        private void computeConstraintConstants(){
+    void computeConstraintConstants(){
         this.minP = minWracc * SQUARED_N_PLUS_P_DIVIDED_BY_N;
-        this.minWracc_times_SQUARED_N_PLUS_P = SQUARED_N_PLUS_P* minWracc;
-        //this.minN = minWracc * N;
     }
-
-    private boolean upperBoundConstraints(int nFather, int pFather, int p, int n){
-       // return ( n <= ( (N * (pFather - minP) ) / P ) ) || ( p <= ( (P * (nFather - minN) ) / N ) );
-        return n <= ( INVERSE_P * (((float)N * (float)pFather) - minWracc_times_SQUARED_N_PLUS_P) );
-    }
-    private boolean lowerBoundConstraints(int p, int n){
+    boolean lowerBoundConstraints(int p, int n){
         //return p >= minP || n >= minN;
         return p >= minP;
     }
 
 
     @Override
-    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative,
-                            HashMap<Integer, IterationState> transactionStartingPosition) {
+    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
         positiveFoundPatterns.put( pattern, patternSupportPositive);
         negativeFoundPatterns.put( pattern, patternSupportNegative );
-        allFoundPatterns.put( pattern,
-                (float)(Math.round(WEIGHT * ( ((float)patternSupportPositive/(float)P) - ((float)patternSupportNegative/(float)N) ) * 100000d) / 100000d)
+        allFoundPatterns.put( pattern, computeEvaluationFunction(patternSupportPositive, patternSupportNegative));
+    }
 
-        );
+    float computeEvaluationFunction( Integer patternSupportPositive, Integer patternSupportNegative){
+        return (float)(Math.round(WEIGHT * ( ((float)patternSupportPositive/(float)P) - ((float)patternSupportNegative/(float)N) ) * 100000d) / 100000d);
+
     }
 
     public static void main( String[] args) {

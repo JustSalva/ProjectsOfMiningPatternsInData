@@ -90,7 +90,7 @@ public abstract class GenericAlgorithm{
                     continue;
                 }
             }
-            addToPatternList( item, patternSupportPositive, patternSupportNegative, transactionStartingPosition);
+            addToPatternList( item, patternSupportPositive, patternSupportNegative);
 
             if(constraintsAreMetInFirstLevel(item, patternSupportPositive, patternSupportNegative)) {
                 nodeToExpand.add( new NodeToExpand( item, transactionStartingPosition, allFoundPatterns.get( item ) ) );
@@ -157,7 +157,7 @@ public abstract class GenericAlgorithm{
                 }
                 if( patternSupportPositive > 0 || patternSupportNegative >0 ){
                     String temp = pattern.concat( ", " + item );
-                    addToPatternList( temp, patternSupportPositive, patternSupportNegative, newTransactionStartingPosition);
+                    addToPatternList( temp, patternSupportPositive, patternSupportNegative);
                     if(constraintsAreMet(pattern, temp, patternSupportPositive, patternSupportNegative)) {
                         nodeToExpand.add( new NodeToExpand( temp, newTransactionStartingPosition,
                                 allFoundPatterns.get( temp ) ) );
@@ -205,8 +205,7 @@ public abstract class GenericAlgorithm{
                                       Integer patternSupportNegative);
     abstract boolean isStillToBeExpanded(Float score);
 
-    abstract void addToPatternList(String pattern, Integer patternSupportPositive, Integer patternSupportNegative,
-                                   HashMap<Integer, IterationState> transactionStartingPosition);
+    abstract void addToPatternList(String pattern, Integer patternSupportPositive, Integer patternSupportNegative);
 
 
     public String printResults(int numberOfDecimals){

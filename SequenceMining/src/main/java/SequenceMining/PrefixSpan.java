@@ -54,8 +54,7 @@ public class PrefixSpan extends GenericAlgorithm {
     }
 
     @Override
-    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative,
-                            HashMap<Integer, IterationState> transactionStartingPosition ) {
+    void addToPatternList ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative) {
         positiveFoundPatterns.put( pattern, patternSupportPositive);
         negativeFoundPatterns.put( pattern, patternSupportNegative );
         allFoundPatterns.put( pattern, (float)( patternSupportPositive+patternSupportNegative ) );
