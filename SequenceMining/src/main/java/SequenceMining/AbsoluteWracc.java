@@ -23,10 +23,11 @@ public class AbsoluteWracc extends SupervisedClosedSequenceMining {
     boolean lowerBoundConstraints ( int p, int n ) {
         return p >= getMinP() || n >= minN;
     }
+
     @Override
     void computeConstraintConstants(){
         super.computeConstraintConstants();
-        this.minN = getMinWracc() * SQUARED_N_PLUS_P_DIVIDED_BY_P;
+        this.minN = getMinEvaluationFunction() * SQUARED_N_PLUS_P_DIVIDED_BY_P;
     }
 
     @Override

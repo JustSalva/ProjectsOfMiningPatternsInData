@@ -143,6 +143,7 @@ public abstract class GenericAlgorithm {
         IterationState iterationState;
         int position;
         HashSet < String > newItems = new HashSet <>();
+        HashSet < String > finalItems = new HashSet <>();
         for ( String item : items.keySet() ) {
             int patternSupportPositive = 0;
             int patternSupportNegative = 0;
@@ -167,12 +168,12 @@ public abstract class GenericAlgorithm {
             addToPatternList( item, patternSupportPositive, patternSupportNegative );
 
             if ( constraintsAreMetInFirstLevel( item, patternSupportPositive, patternSupportNegative ) ) {
-                nodeToExpand.add( new NodeToExpand( item, transactionStartingPosition, allFoundPatterns.get( item ) ) );
+                nodeToExpand.add( new NodeToExpand( item, transactionStartingPosition, allFoundPatterns.get( item ) , finalItems
+                        ) );
                 newItems.add( item );
             }
 
         }
-        HashSet < String > finalItems = new HashSet <>();
         for ( String item : newItems ) {
             if ( isStillToBeExpanded( allFoundPatterns.get( item ) ) ) {
                 finalItems.add( item );
@@ -182,7 +183,7 @@ public abstract class GenericAlgorithm {
         int length = nodeToExpand.size();
         for ( int i = 0; i < length; i++ ) {
             NodeToExpand nextNode = nodeToExpand.poll();
-            start( nextNode.getPattern(), nextNode.getTransactionStartingPosition(), finalItems );
+            start( nextNode.getPattern(), nextNode.getTransactionStartingPosition(), nextNode.getItems() );
         }
 
 
@@ -241,12 +242,12 @@ public abstract class GenericAlgorithm {
                     addToPatternList( temp, patternSupportPositive, patternSupportNegative );
                     if ( constraintsAreMet( pattern, temp, patternSupportPositive, patternSupportNegative ) ) {
                         nodeToExpand.add( new NodeToExpand( temp, newTransactionStartingPosition,
-                                allFoundPatterns.get( temp ) ) );
+                                allFoundPatterns.get( temp ), newItems ) );
                         if ( !nodeToExpand.isEmpty() ) {
                             NodeToExpand nextNode = nodeToExpand.poll();
 
                             start( nextNode.getPattern(), nextNode.getTransactionStartingPosition(),
-                                    new HashSet <>( newItems ) );
+                                    new HashSet <>( nextNode.getItems() ) );
                         }
 
                     }

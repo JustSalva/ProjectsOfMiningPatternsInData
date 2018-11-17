@@ -39,7 +39,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
      * Wracc threshold that the k most frequent items must met
      * it is updated during the search
      */
-    private float minWracc;
+    private float minEvaluationFunction;
 
     /**
      * Minimum value of the positive items, to be used as a lower bound
@@ -124,7 +124,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
         if ( !maxValuesOfK.contains( totalSupport ) ) {
             super.kCounter++;
             maxValuesOfK.add( totalSupport );
-            this.minWracc = maxValuesOfK.last();
+            this.minEvaluationFunction = maxValuesOfK.last();
             computeConstraintConstants();
         }
     }
@@ -173,10 +173,10 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
         float wracc = getAllFoundPatterns().get( pattern );
         if ( !( respectsLowerBounds ) ) {
             return false;
-        } else if ( wracc > minWracc && !maxValuesOfK.contains( wracc ) ) {
+        } else if ( wracc > minEvaluationFunction && !maxValuesOfK.contains( wracc ) ) {
             maxValuesOfK.pollLast();
             maxValuesOfK.add( wracc );
-            minWracc = maxValuesOfK.last();
+            minEvaluationFunction = maxValuesOfK.last();
             computeConstraintConstants();
 
         }
@@ -187,7 +187,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
      * Updates the constants used in the bounds after an update of the min Wracc value
      */
     void computeConstraintConstants () {
-        this.minP = minWracc * SQUARED_N_PLUS_P_DIVIDED_BY_N;
+        this.minP = minEvaluationFunction * SQUARED_N_PLUS_P_DIVIDED_BY_N;
     }
 
     /**
@@ -211,8 +211,8 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
 
     }
 
-    public float getMinWracc () {
-        return minWracc;
+    public float getMinEvaluationFunction () {
+        return minEvaluationFunction;
     }
 
     public float getMinP () {

@@ -1,6 +1,7 @@
 package SequenceMining.SupportStructures;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class describe a pattern's node to be expanded, when it is contained in
@@ -20,10 +21,17 @@ public class NodeToExpand implements Comparable<NodeToExpand>{
      */
     private Float nodeValue;
 
-    public NodeToExpand ( String pattern, HashMap < Integer, IterationState > transactionStartingPosition, Float nodeValue ) {
+    /**
+     * Singular items that are still to be expanded from this node ( =frequent ones)
+     */
+    private HashSet< String > items;
+
+    public NodeToExpand ( String pattern, HashMap < Integer, IterationState > transactionStartingPosition,
+                          Float nodeValue, HashSet < String > items ) {
         this.pattern = pattern;
         this.transactionStartingPosition = transactionStartingPosition;
         this.nodeValue = nodeValue;
+        this.items = items;
     }
 
     public String getPattern () {
@@ -36,6 +44,10 @@ public class NodeToExpand implements Comparable<NodeToExpand>{
 
     public Float getNodeValue () {
         return nodeValue;
+    }
+
+    public HashSet < String > getItems () {
+        return items;
     }
 
     @Override
