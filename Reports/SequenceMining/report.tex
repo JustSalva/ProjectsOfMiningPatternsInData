@@ -1,0 +1,88 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=25mm,
+ right=25mm,
+ top=30mm,
+ bottom=25mm,
+ headsep=7mm}
+
+\usepackage{graphicx}
+\usepackage{todonotes}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{comment}
+\usepackage{lipsum}
+\usepackage{multicol}
+
+
+\graphicspath{ {images/} }
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+	\begin{titlepage}
+		\centering
+		% logo image
+		\includegraphics[scale =0.8]{logo.jpg}\par\vspace{1cm}
+		% institution 
+		{\scshape\LARGE\bfseries Ecole Polytechnique de Louvain\par}
+		\vspace{1.5cm}
+		{\scshape\Large \par}
+		\vspace{1.5cm}
+		% title
+		{\huge\bfseries LINGI2364: Mining Patterns in Data \par}
+		\vspace{1cm}
+		{\Huge Project 1: SequenceMining \par}
+		\vspace{2cm}
+		{\LARGE Group 11\par}
+		% versioning
+		\vspace{1cm}
+		% author
+		{\Large\itshape Alessandra Rossaro (01211800), Matteo Salvadore (01731800)\par}
+		\vspace{2cm}
+		{\small Version 1.0 - \date{\today}\par}
+
+		\vfill
+
+		% Bottom of the page
+		{\large AY 2018-2019\par}
+	\end{titlepage}
+
+	\section{Implementations}
+	The implementations of our algorithms are performed in Java language.\newline
+	The source code and all the resources used to perform this project are available in the following GitHub repository: \url{https://github.com/JustSalva/ProjectsOfMiningPatternsInData}.
+	We have chosen to structure our algorithms in a hierarchical way: the backbone of our entire second assignment is an implementation of the \textit{PrefixSpan} algorithm, performed in an abstract class (\textit{GenericAlgorithm}) that contains all the necessary structures to perform the depth-first search, but leaves details like the evaluation functions, pruning constraints, and all the methods that handle the k-best pattern management (threshold update when a better score is found, initial management of the list containing the best k patterns and heuristic for the node's expansion) to the subclasses that extends our abstract class (one for each task of the assignment).
+	
+		\subsection{Frequent sequence mining}
+		\subsection{Supervised sequence mining}
+		\subsection{Supervised closed sequence mining}
+		\subsection{Alternative scoring functions}
+			\subsubsection{Absolute value of the Wracc score}
+			\subsubsection{Information Gain}			
+	\section{Our system specification}
+		All our measurements have been tested on a laptop with the following specifications:
+		\begin{multicols}{2}
+			\begin{itemize}
+				\item Processor: Intel® Core™ i5-6198DU CPU @ 2.30GHz x 4 
+				\item RAM: 12 GiB - DDR4
+				\item OS: Ubuntu 18.04.1 LTS
+				\item JRE: Java 8u191
+			\end{itemize}
+		\end{multicols}
+	
+	\section{Notes}
+		
+
+\end{document}
