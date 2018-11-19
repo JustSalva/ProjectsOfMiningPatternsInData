@@ -1,0 +1,832 @@
+Test
+[A] 4 3 7
+[C] 4 3 7
+[C, A] 4 3 7
+kValue:  elapsedTime: 
+1 73
+
+Test
+[A] 4 3 7
+[C] 4 3 7
+[C, A] 4 3 7
+[B] 3 3 6
+[A, A] 4 2 6
+[B, A] 3 3 6
+kValue:  elapsedTime: 
+2 5
+
+Test
+[A] 4 3 7
+[C] 4 3 7
+[C, A] 4 3 7
+[B] 3 3 6
+[B, A] 3 3 6
+[A, A] 4 2 6
+[B, B] 2 3 5
+[C, C, A] 3 2 5
+[A, C] 4 1 5
+[A, B] 3 2 5
+[A, C, A] 4 1 5
+[C, C] 3 2 5
+kValue:  elapsedTime: 
+3 12
+
+Test
+[C, A] 4 3 7
+[A] 4 3 7
+[C] 4 3 7
+[B] 3 3 6
+[B, A] 3 3 6
+[A, A] 4 2 6
+[C, C, A] 3 2 5
+[C, C] 3 2 5
+[B, B] 2 3 5
+[A, C] 4 1 5
+[A, B] 3 2 5
+[A, C, A] 4 1 5
+[A, B, B] 2 2 4
+[A, B, A] 3 1 4
+[C, B] 1 3 4
+[A, C, C, A] 3 1 4
+[A, C, C] 3 1 4
+[C, B, A] 1 3 4
+[C, B, B] 1 3 4
+kValue:  elapsedTime: 
+4 16
+
+Test
+[C, A] 4 3 7
+[A] 4 3 7
+[C] 4 3 7
+[B] 3 3 6
+[B, A] 3 3 6
+[A, A] 4 2 6
+[C, C, A] 3 2 5
+[C, C] 3 2 5
+[B, B] 2 3 5
+[A, C] 4 1 5
+[A, B] 3 2 5
+[A, C, A] 4 1 5
+[A, B, B] 2 2 4
+[A, B, A] 3 1 4
+[C, B] 1 3 4
+[A, C, C, A] 3 1 4
+[A, C, C] 3 1 4
+[C, B, A] 1 3 4
+[C, B, B] 1 3 4
+[A, A, C] 3 0 3
+[A, A, B] 2 1 3
+[A, A, A] 3 0 3
+[C, C, B] 1 2 3
+[A, B, C] 2 1 3
+[A, B, C, A] 2 1 3
+[B, C, A] 2 1 3
+[C, B, A, B] 1 2 3
+[B, B, A] 1 2 3
+[B, C] 2 1 3
+[C, A, B] 1 2 3
+[A, A, C, A] 3 0 3
+[B, A, B] 1 2 3
+kValue:  elapsedTime: 
+5 17
+
+Test
+[C, A] 4 3 7
+[A] 4 3 7
+[C] 4 3 7
+[B] 3 3 6
+[B, A] 3 3 6
+[A, A] 4 2 6
+[C, C, A] 3 2 5
+[C, C] 3 2 5
+[B, B] 2 3 5
+[A, C] 4 1 5
+[A, B] 3 2 5
+[A, C, A] 4 1 5
+[A, B, B] 2 2 4
+[A, B, A] 3 1 4
+[C, B] 1 3 4
+[A, C, C, A] 3 1 4
+[A, C, C] 3 1 4
+[C, B, A] 1 3 4
+[C, B, B] 1 3 4
+[A, A, C] 3 0 3
+[A, A, B] 2 1 3
+[A, A, A] 3 0 3
+[C, C, B] 1 2 3
+[A, B, C] 2 1 3
+[A, B, C, A] 2 1 3
+[B, C, A] 2 1 3
+[C, B, A, B] 1 2 3
+[B, B, A] 1 2 3
+[B, C] 2 1 3
+[C, A, B] 1 2 3
+[A, A, C, A] 3 0 3
+[B, A, B] 1 2 3
+[B, B, A, A] 1 1 2
+[A, C, A, B] 1 1 2
+[C, C, B, A] 1 1 2
+[C, C, B, B] 1 1 2
+[A, C, C, B] 1 1 2
+[A, C, B] 1 1 2
+[C, A, A] 1 1 2
+[C, C, A, B] 1 1 2
+[C, C, A, A] 1 1 2
+[A, C, B, A, B] 1 1 2
+[C, B, B, A] 0 2 2
+[A, C, B, B] 1 1 2
+[A, C, B, A] 1 1 2
+[A, B, A, B] 1 1 2
+[B, A, A] 1 1 2
+[A, C, C, A, B] 1 1 2
+kValue:  elapsedTime: 
+6 18
+
+Test
+[C, A] 4 3 7
+[A] 4 3 7
+[C] 4 3 7
+[B] 3 3 6
+[A, A] 4 2 6
+[B, A] 3 3 6
+[C, C] 3 2 5
+[A, C] 4 1 5
+[A, B] 3 2 5
+[A, C, A] 4 1 5
+[C, C, A] 3 2 5
+[B, B] 2 3 5
+[C, B] 1 3 4
+[A, C, C, A] 3 1 4
+[A, C, C] 3 1 4
+[C, B, A] 1 3 4
+[C, B, B] 1 3 4
+[A, B, B] 2 2 4
+[A, B, A] 3 1 4
+[A, A, C] 3 0 3
+[A, A, B] 2 1 3
+[A, A, A] 3 0 3
+[B, C, A] 2 1 3
+[B, B, A] 1 2 3
+[C, C, B] 1 2 3
+[A, B, C] 2 1 3
+[A, B, C, A] 2 1 3
+[C, B, A, B] 1 2 3
+[B, C] 2 1 3
+[C, A, B] 1 2 3
+[A, A, C, A] 3 0 3
+[B, A, B] 1 2 3
+[A, C, A, B] 1 1 2
+[C, C, B, A] 1 1 2
+[C, C, B, B] 1 1 2
+[A, C, C, B] 1 1 2
+[A, C, B] 1 1 2
+[C, C, A, B] 1 1 2
+[C, C, A, A] 1 1 2
+[C, B, B, A] 0 2 2
+[A, B, A, B] 1 1 2
+[B, B, A, A] 1 1 2
+[C, A, A] 1 1 2
+[A, C, B, A, B] 1 1 2
+[A, C, B, B] 1 1 2
+[A, C, B, A] 1 1 2
+[B, A, A] 1 1 2
+[A, C, C, A, B] 1 1 2
+[A, C, A, A] 1 0 1
+[A, B, B, A] 1 0 1
+[A, B, B, C] 1 0 1
+[A, B, B, C, A] 1 0 1
+[A, C, A, C] 1 0 1
+[A, C, C, B, B] 1 0 1
+[A, C, C, B, A] 1 0 1
+[A, C, B, C, A, B] 0 1 1
+[B, B, B, B] 0 1 1
+[A, B, B, A, C, A] 1 0 1
+[C, B, B, A, B, B] 0 1 1
+[B, C, C] 1 0 1
+[B, C, B] 0 1 1
+[B, B, C, A] 1 0 1
+[A, C, C, C, A] 1 0 1
+[A, C, C, A, C, A] 1 0 1
+[A, C, C, C] 1 0 1
+[B, B, B] 0 1 1
+[A, B, C, A, B] 0 1 1
+[B, B, C] 1 0 1
+[A, A, B, A] 1 0 1
+[A, A, B, C] 1 0 1
+[C, C, A, C] 1 0 1
+[C, B, B, B] 0 1 1
+[C, B, C, A, B] 0 1 1
+[C, C, B, B, A, A] 0 1 1
+[A, A, B, C, C, A] 1 0 1
+[C, A, B, B] 0 1 1
+[A, C, B, C, B] 0 1 1
+[A, C, B, C, A] 0 1 1
+[B, A, C, A] 1 0 1
+[A, B, A, A] 1 0 1
+[A, B, B, A, A] 1 0 1
+[A, B, A, C] 1 0 1
+[A, B, B, A, C] 1 0 1
+[C, B, B, A, A] 0 1 1
+[C, B, B, A, B] 0 1 1
+[C, B, C] 0 1 1
+[B, B, A, B] 0 1 1
+[B, B, A, C] 1 0 1
+[C, C, A, C, A] 1 0 1
+[A, C, A, C, A] 1 0 1
+[C, C, C, A] 1 0 1
+[A, B, C, C, A] 1 0 1
+[C, C, C] 1 0 1
+[B, B, A, B, B] 0 1 1
+[A, B, C, B] 0 1 1
+[A, B, C, C] 1 0 1
+[C, B, A, A] 0 1 1
+[B, C, C, A] 1 0 1
+[C, C, B, B, A] 0 1 1
+[A, A, B, C, A] 1 0 1
+[C, A, C, A] 1 0 1
+[A, A, B, C, C] 1 0 1
+[C, B, B, B, B] 0 1 1
+[C, A, C] 1 0 1
+[C, C, B, A, A] 0 1 1
+[C, C, B, A, B] 1 0 1
+[B, C, A, B] 0 1 1
+[A, C, B, C] 0 1 1
+[A, A, C, C, A] 1 0 1
+[B, A, C] 1 0 1
+[B, B, A, C, A] 1 0 1
+[A, A, C, C] 1 0 1
+[A, B, A, C, A] 1 0 1
+[C, B, C, B] 0 1 1
+[C, B, C, A] 0 1 1
+[A, C, C, B, A, B] 1 0 1
+[A, C, C, A, A] 1 0 1
+[A, C, C, A, C] 1 0 1
+kValue:  elapsedTime: 
+7 28
+
+Test
+[C, A] 4 3 7
+[A] 4 3 7
+[C] 4 3 7
+[B] 3 3 6
+[A, A] 4 2 6
+[B, A] 3 3 6
+[C, C] 3 2 5
+[A, C] 4 1 5
+[A, B] 3 2 5
+[A, C, A] 4 1 5
+[C, C, A] 3 2 5
+[B, B] 2 3 5
+[C, B] 1 3 4
+[A, C, C, A] 3 1 4
+[A, C, C] 3 1 4
+[C, B, A] 1 3 4
+[C, B, B] 1 3 4
+[A, B, B] 2 2 4
+[A, B, A] 3 1 4
+[A, A, C] 3 0 3
+[A, A, B] 2 1 3
+[A, A, A] 3 0 3
+[B, C, A] 2 1 3
+[B, B, A] 1 2 3
+[C, C, B] 1 2 3
+[A, B, C] 2 1 3
+[A, B, C, A] 2 1 3
+[C, B, A, B] 1 2 3
+[B, C] 2 1 3
+[C, A, B] 1 2 3
+[A, A, C, A] 3 0 3
+[B, A, B] 1 2 3
+[A, C, A, B] 1 1 2
+[C, C, B, A] 1 1 2
+[C, C, B, B] 1 1 2
+[A, C, C, B] 1 1 2
+[A, C, B] 1 1 2
+[C, C, A, B] 1 1 2
+[C, C, A, A] 1 1 2
+[C, B, B, A] 0 2 2
+[A, B, A, B] 1 1 2
+[B, B, A, A] 1 1 2
+[C, A, A] 1 1 2
+[A, C, B, A, B] 1 1 2
+[A, C, B, B] 1 1 2
+[A, C, B, A] 1 1 2
+[B, A, A] 1 1 2
+[A, C, C, A, B] 1 1 2
+[A, C, A, A] 1 0 1
+[A, B, B, A] 1 0 1
+[A, B, B, C] 1 0 1
+[A, B, B, C, A] 1 0 1
+[A, C, A, C] 1 0 1
+[A, C, C, B, B] 1 0 1
+[A, C, C, B, A] 1 0 1
+[A, C, B, C, A, B] 0 1 1
+[B, B, B, B] 0 1 1
+[A, B, B, A, C, A] 1 0 1
+[C, B, B, A, B, B] 0 1 1
+[B, C, C] 1 0 1
+[B, C, B] 0 1 1
+[B, B, C, A] 1 0 1
+[A, C, C, C, A] 1 0 1
+[A, C, C, A, C, A] 1 0 1
+[A, C, C, C] 1 0 1
+[B, B, B] 0 1 1
+[A, B, C, A, B] 0 1 1
+[B, B, C] 1 0 1
+[A, A, B, A] 1 0 1
+[A, A, B, C] 1 0 1
+[C, C, A, C] 1 0 1
+[C, B, B, B] 0 1 1
+[C, B, C, A, B] 0 1 1
+[C, C, B, B, A, A] 0 1 1
+[A, A, B, C, C, A] 1 0 1
+[C, A, B, B] 0 1 1
+[A, C, B, C, B] 0 1 1
+[A, C, B, C, A] 0 1 1
+[B, A, C, A] 1 0 1
+[A, B, A, A] 1 0 1
+[A, B, B, A, A] 1 0 1
+[A, B, A, C] 1 0 1
+[A, B, B, A, C] 1 0 1
+[C, B, B, A, A] 0 1 1
+[C, B, B, A, B] 0 1 1
+[C, B, C] 0 1 1
+[B, B, A, B] 0 1 1
+[B, B, A, C] 1 0 1
+[C, C, A, C, A] 1 0 1
+[A, C, A, C, A] 1 0 1
+[C, C, C, A] 1 0 1
+[A, B, C, C, A] 1 0 1
+[C, C, C] 1 0 1
+[B, B, A, B, B] 0 1 1
+[A, B, C, B] 0 1 1
+[A, B, C, C] 1 0 1
+[C, B, A, A] 0 1 1
+[B, C, C, A] 1 0 1
+[C, C, B, B, A] 0 1 1
+[A, A, B, C, A] 1 0 1
+[C, A, C, A] 1 0 1
+[A, A, B, C, C] 1 0 1
+[C, B, B, B, B] 0 1 1
+[C, A, C] 1 0 1
+[C, C, B, A, A] 0 1 1
+[C, C, B, A, B] 1 0 1
+[B, C, A, B] 0 1 1
+[A, C, B, C] 0 1 1
+[A, A, C, C, A] 1 0 1
+[B, A, C] 1 0 1
+[B, B, A, C, A] 1 0 1
+[A, A, C, C] 1 0 1
+[A, B, A, C, A] 1 0 1
+[C, B, C, B] 0 1 1
+[C, B, C, A] 0 1 1
+[A, C, C, B, A, B] 1 0 1
+[A, C, C, A, A] 1 0 1
+[A, C, C, A, C] 1 0 1
+kValue:  elapsedTime: 
+8 24
+
+Test
+[C, A] 4 3 7
+[A] 4 3 7
+[C] 4 3 7
+[B] 3 3 6
+[A, A] 4 2 6
+[B, A] 3 3 6
+[C, C] 3 2 5
+[A, C] 4 1 5
+[A, B] 3 2 5
+[A, C, A] 4 1 5
+[C, C, A] 3 2 5
+[B, B] 2 3 5
+[C, B] 1 3 4
+[A, C, C, A] 3 1 4
+[A, C, C] 3 1 4
+[C, B, A] 1 3 4
+[C, B, B] 1 3 4
+[A, B, B] 2 2 4
+[A, B, A] 3 1 4
+[A, A, C] 3 0 3
+[A, A, B] 2 1 3
+[A, A, A] 3 0 3
+[B, C, A] 2 1 3
+[B, B, A] 1 2 3
+[C, C, B] 1 2 3
+[A, B, C] 2 1 3
+[A, B, C, A] 2 1 3
+[C, B, A, B] 1 2 3
+[B, C] 2 1 3
+[C, A, B] 1 2 3
+[A, A, C, A] 3 0 3
+[B, A, B] 1 2 3
+[A, C, A, B] 1 1 2
+[C, C, B, A] 1 1 2
+[C, C, B, B] 1 1 2
+[A, C, C, B] 1 1 2
+[A, C, B] 1 1 2
+[C, C, A, B] 1 1 2
+[C, C, A, A] 1 1 2
+[C, B, B, A] 0 2 2
+[A, B, A, B] 1 1 2
+[B, B, A, A] 1 1 2
+[C, A, A] 1 1 2
+[A, C, B, A, B] 1 1 2
+[A, C, B, B] 1 1 2
+[A, C, B, A] 1 1 2
+[B, A, A] 1 1 2
+[A, C, C, A, B] 1 1 2
+[A, C, A, A] 1 0 1
+[A, B, B, A] 1 0 1
+[A, B, B, C] 1 0 1
+[A, B, B, C, A] 1 0 1
+[A, C, A, C] 1 0 1
+[A, C, C, B, B] 1 0 1
+[A, C, C, B, A] 1 0 1
+[A, C, B, C, A, B] 0 1 1
+[B, B, B, B] 0 1 1
+[A, B, B, A, C, A] 1 0 1
+[C, B, B, A, B, B] 0 1 1
+[B, C, C] 1 0 1
+[B, C, B] 0 1 1
+[B, B, C, A] 1 0 1
+[A, C, C, C, A] 1 0 1
+[A, C, C, A, C, A] 1 0 1
+[A, C, C, C] 1 0 1
+[B, B, B] 0 1 1
+[A, B, C, A, B] 0 1 1
+[B, B, C] 1 0 1
+[A, A, B, A] 1 0 1
+[A, A, B, C] 1 0 1
+[C, C, A, C] 1 0 1
+[C, B, B, B] 0 1 1
+[C, B, C, A, B] 0 1 1
+[C, C, B, B, A, A] 0 1 1
+[A, A, B, C, C, A] 1 0 1
+[C, A, B, B] 0 1 1
+[A, C, B, C, B] 0 1 1
+[A, C, B, C, A] 0 1 1
+[B, A, C, A] 1 0 1
+[A, B, A, A] 1 0 1
+[A, B, B, A, A] 1 0 1
+[A, B, A, C] 1 0 1
+[A, B, B, A, C] 1 0 1
+[C, B, B, A, A] 0 1 1
+[C, B, B, A, B] 0 1 1
+[C, B, C] 0 1 1
+[B, B, A, B] 0 1 1
+[B, B, A, C] 1 0 1
+[C, C, A, C, A] 1 0 1
+[A, C, A, C, A] 1 0 1
+[C, C, C, A] 1 0 1
+[A, B, C, C, A] 1 0 1
+[C, C, C] 1 0 1
+[B, B, A, B, B] 0 1 1
+[A, B, C, B] 0 1 1
+[A, B, C, C] 1 0 1
+[C, B, A, A] 0 1 1
+[B, C, C, A] 1 0 1
+[C, C, B, B, A] 0 1 1
+[A, A, B, C, A] 1 0 1
+[C, A, C, A] 1 0 1
+[A, A, B, C, C] 1 0 1
+[C, B, B, B, B] 0 1 1
+[C, A, C] 1 0 1
+[C, C, B, A, A] 0 1 1
+[C, C, B, A, B] 1 0 1
+[B, C, A, B] 0 1 1
+[A, C, B, C] 0 1 1
+[A, A, C, C, A] 1 0 1
+[B, A, C] 1 0 1
+[B, B, A, C, A] 1 0 1
+[A, A, C, C] 1 0 1
+[A, B, A, C, A] 1 0 1
+[C, B, C, B] 0 1 1
+[C, B, C, A] 0 1 1
+[A, C, C, B, A, B] 1 0 1
+[A, C, C, A, A] 1 0 1
+[A, C, C, A, C] 1 0 1
+kValue:  elapsedTime: 
+9 38
+
+Test
+[C, A] 4 3 7
+[A] 4 3 7
+[C] 4 3 7
+[B] 3 3 6
+[A, A] 4 2 6
+[B, A] 3 3 6
+[C, C] 3 2 5
+[A, C] 4 1 5
+[A, B] 3 2 5
+[A, C, A] 4 1 5
+[C, C, A] 3 2 5
+[B, B] 2 3 5
+[C, B] 1 3 4
+[A, C, C, A] 3 1 4
+[A, C, C] 3 1 4
+[C, B, A] 1 3 4
+[C, B, B] 1 3 4
+[A, B, B] 2 2 4
+[A, B, A] 3 1 4
+[A, A, C] 3 0 3
+[A, A, B] 2 1 3
+[A, A, A] 3 0 3
+[B, C, A] 2 1 3
+[B, B, A] 1 2 3
+[C, C, B] 1 2 3
+[A, B, C] 2 1 3
+[A, B, C, A] 2 1 3
+[C, B, A, B] 1 2 3
+[B, C] 2 1 3
+[C, A, B] 1 2 3
+[A, A, C, A] 3 0 3
+[B, A, B] 1 2 3
+[A, C, A, B] 1 1 2
+[C, C, B, A] 1 1 2
+[C, C, B, B] 1 1 2
+[A, C, C, B] 1 1 2
+[A, C, B] 1 1 2
+[C, C, A, B] 1 1 2
+[C, C, A, A] 1 1 2
+[C, B, B, A] 0 2 2
+[A, B, A, B] 1 1 2
+[B, B, A, A] 1 1 2
+[C, A, A] 1 1 2
+[A, C, B, A, B] 1 1 2
+[A, C, B, B] 1 1 2
+[A, C, B, A] 1 1 2
+[B, A, A] 1 1 2
+[A, C, C, A, B] 1 1 2
+[A, C, A, A] 1 0 1
+[A, B, B, A] 1 0 1
+[A, B, B, C] 1 0 1
+[A, B, B, C, A] 1 0 1
+[A, C, A, C] 1 0 1
+[A, C, C, B, B] 1 0 1
+[A, C, C, B, A] 1 0 1
+[A, C, B, C, A, B] 0 1 1
+[B, B, B, B] 0 1 1
+[A, B, B, A, C, A] 1 0 1
+[C, B, B, A, B, B] 0 1 1
+[B, C, C] 1 0 1
+[B, C, B] 0 1 1
+[B, B, C, A] 1 0 1
+[A, C, C, C, A] 1 0 1
+[A, C, C, A, C, A] 1 0 1
+[A, C, C, C] 1 0 1
+[B, B, B] 0 1 1
+[A, B, C, A, B] 0 1 1
+[B, B, C] 1 0 1
+[A, A, B, A] 1 0 1
+[A, A, B, C] 1 0 1
+[C, C, A, C] 1 0 1
+[C, B, B, B] 0 1 1
+[C, B, C, A, B] 0 1 1
+[C, C, B, B, A, A] 0 1 1
+[A, A, B, C, C, A] 1 0 1
+[C, A, B, B] 0 1 1
+[A, C, B, C, B] 0 1 1
+[A, C, B, C, A] 0 1 1
+[B, A, C, A] 1 0 1
+[A, B, A, A] 1 0 1
+[A, B, B, A, A] 1 0 1
+[A, B, A, C] 1 0 1
+[A, B, B, A, C] 1 0 1
+[C, B, B, A, A] 0 1 1
+[C, B, B, A, B] 0 1 1
+[C, B, C] 0 1 1
+[B, B, A, B] 0 1 1
+[B, B, A, C] 1 0 1
+[C, C, A, C, A] 1 0 1
+[A, C, A, C, A] 1 0 1
+[C, C, C, A] 1 0 1
+[A, B, C, C, A] 1 0 1
+[C, C, C] 1 0 1
+[B, B, A, B, B] 0 1 1
+[A, B, C, B] 0 1 1
+[A, B, C, C] 1 0 1
+[C, B, A, A] 0 1 1
+[B, C, C, A] 1 0 1
+[C, C, B, B, A] 0 1 1
+[A, A, B, C, A] 1 0 1
+[C, A, C, A] 1 0 1
+[A, A, B, C, C] 1 0 1
+[C, B, B, B, B] 0 1 1
+[C, A, C] 1 0 1
+[C, C, B, A, A] 0 1 1
+[C, C, B, A, B] 1 0 1
+[B, C, A, B] 0 1 1
+[A, C, B, C] 0 1 1
+[A, A, C, C, A] 1 0 1
+[B, A, C] 1 0 1
+[B, B, A, C, A] 1 0 1
+[A, A, C, C] 1 0 1
+[A, B, A, C, A] 1 0 1
+[C, B, C, B] 0 1 1
+[C, B, C, A] 0 1 1
+[A, C, C, B, A, B] 1 0 1
+[A, C, C, A, A] 1 0 1
+[A, C, C, A, C] 1 0 1
+kValue:  elapsedTime: 
+10 15
+
+Protein
+[S] 369 215 584
+kValue:  elapsedTime: 
+1 251
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+kValue:  elapsedTime: 
+2 119
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+[L] 254 207 461
+kValue:  elapsedTime: 
+3 71
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+[L] 254 207 461
+[A] 243 199 442
+kValue:  elapsedTime: 
+4 79
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+[L] 254 207 461
+[A] 243 199 442
+[E] 203 234 437
+[P] 212 225 437
+kValue:  elapsedTime: 
+5 99
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+[L] 254 207 461
+[A] 243 199 442
+[E] 203 234 437
+[P] 212 225 437
+[G] 196 228 424
+kValue:  elapsedTime: 
+6 86
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+[L] 254 207 461
+[A] 243 199 442
+[E] 203 234 437
+[P] 212 225 437
+[G] 196 228 424
+[R, S] 344 73 417
+kValue:  elapsedTime: 
+7 138
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+[L] 254 207 461
+[A] 243 199 442
+[E] 203 234 437
+[P] 212 225 437
+[G] 196 228 424
+[R, S] 344 73 417
+[Y] 99 314 413
+kValue:  elapsedTime: 
+8 275
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+[L] 254 207 461
+[A] 243 199 442
+[E] 203 234 437
+[P] 212 225 437
+[G] 196 228 424
+[R, S] 344 73 417
+[Y] 99 314 413
+[V] 193 199 392
+kValue:  elapsedTime: 
+9 234
+
+Protein
+[S] 369 215 584
+[R] 367 152 519
+[L] 254 207 461
+[A] 243 199 442
+[E] 203 234 437
+[P] 212 225 437
+[G] 196 228 424
+[R, S] 344 73 417
+[Y] 99 314 413
+[V] 193 199 392
+[T] 195 187 382
+kValue:  elapsedTime: 
+10 393
+
+Reuters
+[reuter] 1420 2674 4094
+kValue:  elapsedTime: 
+1 85678
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+kValue:  elapsedTime: 
+2 86097
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+[and] 1216 1161 2377
+kValue:  elapsedTime: 
+3 90372
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+[and] 1216 1161 2377
+[and, reuter] 1183 1147 2330
+kValue:  elapsedTime: 
+4 94294
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+[and] 1216 1161 2377
+[and, reuter] 1183 1147 2330
+[mln, reuter] 692 1625 2317
+kValue:  elapsedTime: 
+5 89268
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+[and] 1216 1161 2377
+[and, reuter] 1183 1147 2330
+[mln, reuter] 692 1625 2317
+[dlr] 895 1262 2157
+kValue:  elapsedTime: 
+6 86503
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+[and] 1216 1161 2377
+[and, reuter] 1183 1147 2330
+[mln, reuter] 692 1625 2317
+[dlr] 895 1262 2157
+[ct] 27 2025 2052
+[dlr, reuter] 841 1211 2052
+kValue:  elapsedTime: 
+7 89798
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+[and] 1216 1161 2377
+[and, reuter] 1183 1147 2330
+[mln, reuter] 692 1625 2317
+[dlr] 895 1262 2157
+[ct] 27 2025 2052
+[dlr, reuter] 841 1211 2052
+[inc] 879 1162 2041
+kValue:  elapsedTime: 
+8 94931
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+[and] 1216 1161 2377
+[and, reuter] 1183 1147 2330
+[mln, reuter] 692 1625 2317
+[dlr] 895 1262 2157
+[ct] 27 2025 2052
+[dlr, reuter] 841 1211 2052
+[inc] 879 1162 2041
+[for] 1073 946 2019
+kValue:  elapsedTime: 
+9 90777
+
+Reuters
+[reuter] 1420 2674 4094
+[mln] 719 1674 2393
+[and] 1216 1161 2377
+[and, reuter] 1183 1147 2330
+[mln, reuter] 692 1625 2317
+[dlr] 895 1262 2157
+[ct] 27 2025 2052
+[dlr, reuter] 841 1211 2052
+[inc] 879 1162 2041
+[for] 1073 946 2019
+[ct, reuter] 26 1954 1980
+kValue:  elapsedTime: 
+10 95639
+

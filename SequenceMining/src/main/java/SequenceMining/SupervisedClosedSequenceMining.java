@@ -31,6 +31,14 @@ public class SupervisedClosedSequenceMining extends SupervisedSequenceMining {
 
     }
 
+    public static String performances ( String[] args ) {
+        String filepathPositive = args[ 0 ];
+        String filepathNegative = args[ 1 ];
+        int k = Integer.parseInt( args[ 2 ] );
+        GenericAlgorithm genericAlgorithm = new SupervisedClosedSequenceMining( k );
+        return genericAlgorithm.start( filepathPositive, filepathNegative, 5 );
+    }
+
     /**
      * {@inheritDoc}
      * This implementation, before printing the results removes all non closed patterns

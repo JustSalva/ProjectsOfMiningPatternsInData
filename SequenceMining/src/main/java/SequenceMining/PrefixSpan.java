@@ -39,6 +39,14 @@ public class PrefixSpan extends GenericAlgorithm {
 
     }
 
+    public static String performances ( String[] args ) {
+        String filepathPositive = args[ 0 ];
+        String filepathNegative = args[ 1 ];
+        int k = Integer.parseInt( args[ 2 ] );
+        GenericAlgorithm genericAlgorithm = new PrefixSpan( k );
+        return genericAlgorithm.start( filepathPositive, filepathNegative, 0 ) ;
+    }
+
     /**
      * {@inheritDoc}
      */

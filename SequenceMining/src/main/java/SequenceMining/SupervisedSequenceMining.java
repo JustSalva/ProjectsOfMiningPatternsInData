@@ -23,38 +23,32 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
      * Number of negative transactions
      */
     int N;
-
+    /**
+     * = N^2 + P , constant used to avoid repeating useless recalculations
+     */
+    float SQUARED_N_PLUS_P;
+    /**
+     * = (N^2 + P ) / N , constant used to avoid repeating useless recalculations
+     */
+    float SQUARED_N_PLUS_P_DIVIDED_BY_N;
     /**
      * Constant weight of the Wracc function =  ( P / ( N + P ) ) * ( N / ( N + P ) )
      */
     private float WEIGHT;
-
     /**
      * Support structure used to update the minimum values of the Wracc during the search
      * (ordered structure)
      */
     private TreeSet < Float > maxValuesOfK;
-
     /**
      * Wracc threshold that the k most frequent items must met
      * it is updated during the search
      */
     private float minEvaluationFunction;
-
     /**
      * Minimum value of the positive items, to be used as a lower bound
      */
     private float minP;
-
-    /**
-     * = N^2 + P , constant used to avoid repeating useless recalculations
-     */
-    float SQUARED_N_PLUS_P;
-
-    /**
-     * = (N^2 + P ) / N , constant used to avoid repeating useless recalculations
-     */
-    float SQUARED_N_PLUS_P_DIVIDED_BY_N;
 
 
     public SupervisedSequenceMining ( int k ) {
@@ -73,6 +67,14 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
             System.out.println( genericAlgorithm.start( filepathPositive, filepathNegative, 5 ) );
         }
 
+    }
+
+    public static String performances ( String[] args ) {
+        String filepathPositive = args[ 0 ];
+        String filepathNegative = args[ 1 ];
+        int k = Integer.parseInt( args[ 2 ] );
+        GenericAlgorithm genericAlgorithm = new SupervisedSequenceMining( k );
+        return genericAlgorithm.start( filepathPositive, filepathNegative, 5 );
     }
 
     /**
@@ -115,7 +117,6 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
      * {@inheritDoc}
      * This implementation keeps a list of the k higher found Wracc values and
      * update the minimum with its new lower value
-     *
      */
     @Override
     void addMinElement ( String pattern, Integer patternSupportPositive, Integer patternSupportNegative ) {
@@ -165,8 +166,9 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
     /**
      * Checks if the constraints are met and updates the k most higher values of Wracc's
      * list and the minimum Wracc value, if needed
+     *
      * @param respectsLowerBounds true if the pattern respects the lower bound
-     * @param pattern pattern to be evaluated
+     * @param pattern             pattern to be evaluated
      * @return true if the node can be expanded, false otherwise
      */
     private boolean checkConstraints ( boolean respectsLowerBounds, String pattern ) {
@@ -192,6 +194,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
 
     /**
      * Checks if the lower bound constraints are met
+     *
      * @param p positive support of the pattern to be evaluated
      * @param n negative support of the pattern to be evaluated
      * @return true if they are met, false otherwise
@@ -202,6 +205,7 @@ public class SupervisedSequenceMining extends GenericAlgorithm {
 
     /**
      * Computes the Wracc evaluation function
+     *
      * @param patternSupportPositive positive support of the pattern to be evaluated
      * @param patternSupportNegative negative support of the pattern to be evaluated
      * @return the computed value
