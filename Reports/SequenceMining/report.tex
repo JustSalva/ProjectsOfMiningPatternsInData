@@ -63,7 +63,7 @@
 
 	\section{Implementations}
 	The implementations of our algorithms are performed in Java language (JDK 8 ).
-	The source code and all the resources used to perform this project are available in the following GitHub repository: \url{https://github.com/JustSalva/ProjectsOfMiningPatternsInData}.\newline\newline
+	The source code (with its Javadoc documentation) and all the resources used to perform this project are available in the following GitHub repository: \url{https://github.com/JustSalva/ProjectsOfMiningPatternsInData}.\newline\newline
 	We have chosen to structure our algorithms in a hierarchical way: the backbone of our entire second assignment is an implementation of the \textit{PrefixSpan} algorithm, performed in an abstract class (\textit{GenericAlgorithm}) that contains all the necessary structures to perform the depth-first search, but leaves details like the evaluation functions, pruning constraints, and all methods that handle the k-best pattern management (threshold update when a better score is found, initial management of the list containing the best k patterns and heuristic function for the node's expansion) to the subclasses that extend our abstract class (one for each task of the assignment).
 	The transactions are read from the data-sets and stored in a custom structure we have built; the structure consists in a unique hash-map (in order to perform direct accesses =$>$ O(1) complexity), we have used a boolean flag to distinguish the transactions belonging either to the positive data-set and to the negative one.\newline
 	\begin{wrapfigure}[]{h}{0.5\textwidth}
