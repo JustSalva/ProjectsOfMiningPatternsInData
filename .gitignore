@@ -91,3 +91,5 @@ ClassifyingGraphs/\.idea/
 *.log
 
 SequenceMining/\.idea/
+
+ClassifyingGraphs/gspan_mining/__pycache__/
