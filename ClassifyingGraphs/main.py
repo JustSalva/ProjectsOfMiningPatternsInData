@@ -140,7 +140,6 @@ class K_MostConfidentAndFrequentPositiveSubGraphs(PatternGraphs):
             self.patterns.append((dfs_code, gid_subsets, confidence, frequency))
             if confidence < self.minConfidence:
                 self.minConfidence = confidence
-                self.minFrequency = frequency
                 self.orderedListOfFrequencyValuesForMinConfidence.clear()
                 self.orderedListOfFrequencyValuesForMinConfidence.append(frequency)
                 self.initialFrequency = False
@@ -167,7 +166,8 @@ class K_MostConfidentAndFrequentPositiveSubGraphs(PatternGraphs):
             self.mostConfidentAndFrequentKValues[newConfidence].add(newFrequency)
             self.insertElementInOrderedList(self.orderedListOfConfidenceValues, newConfidence)
 
-        if newConfidence == self.minConfidence:
+        if newConfidence == self.minConfidence and \
+                newFrequency not in self.mostConfidentAndFrequentKValues[newConfidence]:
             self.insertElementInOrderedList(self.orderedListOfFrequencyValuesForMinConfidence, newFrequency)
 
     def updateConfidence(self, newFrequency, newConfidence):
@@ -184,27 +184,18 @@ class K_MostConfidentAndFrequentPositiveSubGraphs(PatternGraphs):
 
     def removeMinConfidenceAndFrequency(self):
         set = self.mostConfidentAndFrequentKValues[self.minConfidence]
-        if not self.initialFrequency:
-            set.remove(self.minFrequency)
-            self.orderedListOfFrequencyValuesForMinConfidence.pop(0)
+        set.remove(self.orderedListOfFrequencyValuesForMinConfidence[0])
+        self.orderedListOfFrequencyValuesForMinConfidence.pop(0)
 
-            if len(self.mostConfidentAndFrequentKValues[self.minConfidence]) == 0:
-                del self.mostConfidentAndFrequentKValues[self.minConfidence]
-                self.orderedListOfConfidenceValues.pop(0)
-                self.minConfidence = self.orderedListOfConfidenceValues[0]
-                self.orderedListOfFrequencyValuesForMinConfidence = []
-                # create new list of min frequency elements
-                for element in self.mostConfidentAndFrequentKValues[self.minConfidence]:
-                    self.insertElementInOrderedList(self.orderedListOfFrequencyValuesForMinConfidence, element)
-            self.minFrequency = self.orderedListOfFrequencyValuesForMinConfidence[0]
+        if len(self.mostConfidentAndFrequentKValues[self.minConfidence]) == 0:
+            del self.mostConfidentAndFrequentKValues[self.minConfidence]
+            self.orderedListOfConfidenceValues.pop(0)
+            self.minConfidence = self.orderedListOfConfidenceValues[0]
+            self.orderedListOfFrequencyValuesForMinConfidence = []
+            # create new list of min frequency elements
+            for element in self.mostConfidentAndFrequentKValues[self.minConfidence]:
+                self.insertElementInOrderedList(self.orderedListOfFrequencyValuesForMinConfidence, element)
 
-        else:
-
-            if self.orderedListOfFrequencyValuesForMinConfidence[0] >= self.minFrequency:
-                self.initialFrequency = False
-                self.minFrequency = self.orderedListOfFrequencyValuesForMinConfidence[0]
-                for element in self.mostConfidentAndFrequentKValues[self.minConfidence]:
-                    self.insertElementInOrderedList(self.orderedListOfFrequencyValuesForMinConfidence, element)
 
     def updateFrequency(self, newFrequency, confidence):
 
@@ -226,17 +217,34 @@ class K_MostConfidentAndFrequentPositiveSubGraphs(PatternGraphs):
         if len(list) == 0:
             list.append(newElement)
         else:
+            inserted = False
             for i in range(0, len(list)):
-                if list[i] > newElement:
+                if newElement < list[i]:
                     list.insert(i, newElement)
+                    inserted = True
+                    break
+            if not inserted:
+                list.append(newElement)
 
     # Prunes any pattern that is not frequent in the positive class
     def prune(self, gid_subsets):
         p = len(gid_subsets[0])
         n = len(gid_subsets[1])
-        confidence = float(p) / float(p + n)
         frequency = n + p
-        return frequency < self.minFrequency or confidence < self.minConfidence
+        if self.numberOfKMost < self.k:
+            return frequency < self.minFrequency
+
+        confidence = float(p) / float(p + n)
+
+        if confidence == self.minConfidence and frequency < self.minFrequency:
+            return False
+        if frequency < self.minFrequency:
+            return True
+        #  confidence does not have anti-monotone property.
+        # if confidence < self.minConfidence:
+        #     return True
+        return False
+        # return frequency < self.minFrequency
 
     # creates a column for a feature matrix
     def create_fm_col(self, all_gids, subset_gids):
@@ -288,9 +296,27 @@ def example1():
 
     gSpan(task).run()  # Running gSpan
 
-    # Printing frequent patterns along with their positive support:
-    for pattern, gid_subsets, confidence, frequency in task.patterns:
-        print('{} {} {}'.format(pattern, confidence, frequency))
+    with open('./solution1', 'w') as file:
+        firstLine = True
+        result = ""
+        # Printing frequent patterns along with their positive support:
+        for confidenceLevel in reversed(task.orderedListOfConfidenceValues):
+            for pattern, gid_subsets, confidence, frequency in task.patterns:
+                if confidence == confidenceLevel:
+                    toPrint = False
+                    if confidence > task.minConfidence:
+                        toPrint = True
+                    elif confidence == task.minConfidence:
+                        if frequency >= task.orderedListOfFrequencyValuesForMinConfidence[0]:
+                            toPrint = True
+
+                    if toPrint:
+                        if not firstLine:
+                            result += '\n'
+                        else:
+                            firstLine = False
+                        result += '{} {} {}'.format(pattern, confidence, frequency)
+        print(result, file=file, end='')
 
 
 def example2():
