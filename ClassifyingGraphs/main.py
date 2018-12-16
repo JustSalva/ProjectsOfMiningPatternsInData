@@ -10,8 +10,6 @@ import sys
 import numpy
 from sklearn import metrics
 from sklearn import *
-from sklearn.linear_model import SGDClassifier
-from sklearn.tree import DecisionTreeClassifier
 
 from gspan_mining import gSpan
 from gspan_mining import GraphDatabase
@@ -135,7 +133,7 @@ class K_MostConfidentAndFrequentPositiveSubGraphs(PatternGraphs):
         isPositivePattern = True
         confidence = float(p) / float(p + n)
         if self.considerAlsoNegative:
-            confidenceNegative = confidence = float(n) / float(p + n)
+            confidenceNegative = float(n) / float(p + n)
             if confidenceNegative > confidence:
                 confidence = confidenceNegative
                 isPositivePattern = False
@@ -171,15 +169,16 @@ class K_MostConfidentAndFrequentPositiveSubGraphs(PatternGraphs):
             if newFrequency not in self.mostConfidentAndFrequentKValues[newConfidence]:
                 self.numberOfKMost += 1
                 self.mostConfidentAndFrequentKValues[newConfidence].add(newFrequency)
+                self.insertElementInOrderedList(self.orderedListOfFrequencyValuesForMinConfidence, newFrequency)
+
         else:
             self.numberOfKMost += 1
             self.mostConfidentAndFrequentKValues[newConfidence] = set()
             self.mostConfidentAndFrequentKValues[newConfidence].add(newFrequency)
             self.insertElementInOrderedList(self.orderedListOfConfidenceValues, newConfidence)
-
-        if newConfidence == self.minConfidence and \
-                newFrequency not in self.mostConfidentAndFrequentKValues[newConfidence]:
-            self.insertElementInOrderedList(self.orderedListOfFrequencyValuesForMinConfidence, newFrequency)
+            if newConfidence == self.minConfidence and \
+                    newFrequency not in self.mostConfidentAndFrequentKValues[newConfidence]:
+                self.insertElementInOrderedList(self.orderedListOfFrequencyValuesForMinConfidence, newFrequency)
 
     def updateConfidence(self, newFrequency, newConfidence):
         if newConfidence > self.minConfidence:
@@ -197,7 +196,6 @@ class K_MostConfidentAndFrequentPositiveSubGraphs(PatternGraphs):
         set = self.mostConfidentAndFrequentKValues[self.minConfidence]
         set.remove(self.orderedListOfFrequencyValuesForMinConfidence[0])
         self.orderedListOfFrequencyValuesForMinConfidence.pop(0)
-
         if len(self.mostConfidentAndFrequentKValues[self.minConfidence]) == 0:
             del self.mostConfidentAndFrequentKValues[self.minConfidence]
             self.orderedListOfConfidenceValues.pop(0)
@@ -279,13 +277,13 @@ class K_MostConfidentAndFrequentPositiveSubGraphs(PatternGraphs):
     # and the rows to examples in the subset.
     def get_feature_matrices(self):
         matrices = [[] for _ in self.gid_subsets]
-        for pattern, gid_subsets, _, _, _, _ , _ in self.patterns:
+        for pattern, gid_subsets, _, _, _, _, _ in self.patterns:
             for i, gid_subset in enumerate(gid_subsets):
                 matrices[i].append(self.create_fm_col(self.gid_subsets[i], gid_subset))
         return [numpy.array(matrix).transpose() for matrix in matrices]
 
 
-def exercise1():
+def task1():
     """
     Runs gSpan with the specified positive and negative graphs, finds all frequent subGraphs in the positive class
     with a minimum positive support of minSup and prints them.
@@ -337,7 +335,7 @@ def exercise1():
         print(result, file=file, end='')
 
 
-def exercise2():
+def task2():
     """
     Runs gSpan with the specified positive and negative graphs; finds all frequent sub-graphs in the training subset of
     the positive class with a minimum support of minSup.
@@ -448,6 +446,184 @@ def train_and_evaluate(minFrequency, database, subsets, k):
     print()  # Blank line to indicate end of fold.
 
 
+def task3():
+    args = sys.argv
+    database_file_name_pos = args[1]  # First parameter: path to positive class file
+    database_file_name_neg = args[2]  # Second parameter: path to negative class file
+    k = int(args[3])  # Third parameter: minimum support (note: this parameter will be k in case of top-k mining) 0
+    minFrequency = int(args[4])
+    nfolds = int(args[5])  # Fourth parameter: number of folds to use in the k-fold cross-validation.
+
+    if not os.path.exists(database_file_name_pos):
+        print('{} does not exist.'.format(database_file_name_pos))
+        sys.exit()
+    if not os.path.exists(database_file_name_neg):
+        print('{} does not exist.'.format(database_file_name_neg))
+        sys.exit()
+
+    graph_database = GraphDatabase()  # Graph database object
+    pos_ids = graph_database.read_graphs(
+        database_file_name_pos)  # Reading positive graphs, adding them to database and getting ids
+    neg_ids = graph_database.read_graphs(
+        database_file_name_neg)  # Reading negative graphs, adding them to database and getting ids
+
+    # If less than two folds: using the same set as training and test set
+    # (note this is not an accurate way to evaluate the performances!)
+    if nfolds < 2:
+        subsets = [
+            pos_ids,  # Positive training set
+            pos_ids,  # Positive test set
+            neg_ids,  # Negative training set
+            neg_ids  # Negative test set
+        ]
+        # Printing fold number:
+        print('fold {}'.format(1))
+        train_and_evaluate(minFrequency, graph_database, subsets, k)
+
+    # Otherwise: performs k-fold cross-validation:
+    else:
+        pos_fold_size = len(pos_ids) // nfolds
+        neg_fold_size = len(neg_ids) // nfolds
+        for i in range(0, nfolds):
+            # Use fold as test set, the others as training set for each class;
+            # identify all the subsets to be maintained by the graph mining algorithm.
+            subsets = [
+                numpy.concatenate((pos_ids[:i * pos_fold_size], pos_ids[(i + 1) * pos_fold_size:])),
+                # Positive training set
+                pos_ids[i * pos_fold_size:(i + 1) * pos_fold_size],  # Positive test set
+                numpy.concatenate((neg_ids[:i * neg_fold_size], neg_ids[(i + 1) * neg_fold_size:])),
+                # Negative training set
+                neg_ids[i * neg_fold_size:(i + 1) * neg_fold_size],  # Negative test set
+            ]
+            # Printing fold number:
+            print('fold {}'.format(i + 1))
+            train_and_evaluate_task3(minFrequency, graph_database, subsets, k)
+
+
+def sortList(list):
+    maxConfidence = 0
+    maxFrequency = 0
+    for element in list:
+        if maxConfidence < element[2]:
+            maxConfidence = element[2]
+            maxFrequency = element[3]
+        if maxConfidence == element[2]:
+            if maxFrequency < element[3]:
+                maxFrequency = element[3]
+    result = []
+    for elem in list:
+        if maxConfidence == elem[2] and maxFrequency == elem[3]:
+            result.append(elem)
+    return result
+
+
+def train_and_evaluate_task3(minFrequency, database, subsets, k):
+    rules = []
+    task = K_MostConfidentAndFrequentPositiveSubGraphs(minFrequency, database, subsets, 5, True)
+    pos_ids = subsets[0]
+    pos_idsTest = subsets[1]
+    neg_ids = subsets[2]
+    neg_idsTest = subsets[3]
+    for _ in range(0, k):
+        gSpan(task).run()  # Running gSpan
+
+        numberOfPatternsFound = len(task.patterns)
+        if numberOfPatternsFound == 0:
+            break
+        patterns = sortList(task.patterns)
+        numberOfPatternsFound = len(patterns)
+        pattern = patterns[0]
+        if numberOfPatternsFound == 1:
+            #  N.B. rule format: (dfs_code, gid_subsets, confidence, frequency, p_test, n_test, isPositivePattern)
+            rules.append(pattern)
+        elif numberOfPatternsFound > 1:
+            for i in range(1, numberOfPatternsFound):
+                if patterns[i] < pattern:
+                    pattern = patterns[i]
+            rules.append(pattern)
+
+        nextPosIds = []
+        for transaction in pos_ids:
+            if int(transaction) not in pattern[1][0]:  # == gid_subsets
+                nextPosIds.append(int(transaction))
+        nextPosIdsTest = []
+        for transaction in pos_idsTest:
+            if int(transaction) not in pattern[1][1]:  # == gid_subsets
+                nextPosIdsTest.append(int(transaction))
+        nextNegIds = []
+        for transaction in neg_ids:
+            if int(transaction) not in pattern[1][2]:  # == gid_subsets
+                nextNegIds.append(int(transaction))
+        nextNegIdsTest = []
+        for transaction in neg_idsTest:
+            if int(transaction) not in pattern[1][3]:  # == gid_subsets
+                nextNegIdsTest.append(int(transaction))
+        projectedSubset = [nextPosIds, nextPosIdsTest, nextNegIds, nextNegIdsTest]
+        pos_ids = nextPosIds
+        pos_idsTest = nextPosIdsTest
+        neg_ids = nextNegIds
+        neg_idsTest = nextNegIdsTest
+        task = K_MostConfidentAndFrequentPositiveSubGraphs(minFrequency, database, projectedSubset, 5, True)
+    # default class is positive if there are more remaining positive examples, or if there are no remaining patterns
+    isDefaultPositive = len(nextPosIds) >= len(nextNegIds)
+
+    # classification
+    predicted = []
+    correctPredictions = 0
+    testPositive = subsets[1]
+    testNegative = subsets[3]
+    for transaction in testPositive:
+        isTransactionPositive = isDefaultPositive
+        for rule in rules:
+            # N.B. rule format: (dfs_code, gid_subsets, confidence, frequency, p_test, n_test, isPositivePattern)
+            if transaction in rule[1][1]:
+                if rule[6]:
+                    isTransactionPositive = True
+                else:
+                    isTransactionPositive = False
+                break
+
+        if isTransactionPositive:
+            predicted.append(1)
+            correctPredictions += 1
+        else:
+            predicted.append(-1)
+    for transaction in testNegative:
+        isTransactionPositive = isDefaultPositive
+        for rule in rules:
+            # N.B. rule format: (dfs_code, gid_subsets, confidence, frequency, p_test, n_test, isPositivePattern)
+            if transaction in rule[1][3]:
+                if rule[6]:
+                    isTransactionPositive = True
+                else:
+                    isTransactionPositive = False
+                break
+
+        if isTransactionPositive:
+            predicted.append(1)
+        else:
+            predicted.append(-1)
+            correctPredictions += 1
+    accuracy = correctPredictions / (len(testPositive) + len(testNegative))
+
+    # Printing frequent patterns along with their positive support:
+    firstLine = True
+    result = ""
+    # Printing frequent patterns along with their positive support:
+    for pattern, gid_subsets, confidence, frequency, _, _, _ in rules:
+        if not firstLine:
+            result += '\n'
+        else:
+            firstLine = False
+        result += '{} {} {}'.format(pattern, confidence, frequency)
+
+    print(result)
+    # printing classification results:
+    print(predicted)
+    print('accuracy: {}'.format(accuracy))
+    print()  # Blank line to indicate end of fold.
+
+
 if __name__ == '__main__':
-    exercise1()
-# exercise1()
+    task3()
+# task1()
