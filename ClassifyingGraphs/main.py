@@ -669,7 +669,7 @@ def task4():
     database_file_name_neg = args[2]  # Second parameter: path to negative class file
     nfolds = int(args[3]) # Third parameter: number of folds to use in the k-fold cross-validation.
 
-    k = 5
+
 
     if not os.path.exists(database_file_name_pos):
         print('{} does not exist.'.format(database_file_name_pos))
@@ -684,6 +684,7 @@ def task4():
     neg_ids = graph_database.read_graphs(
         database_file_name_neg)  # Reading negative graphs, adding them to database and getting ids
     minFrequency = (len(pos_ids) + len(neg_ids)) // 8
+    k = minFrequency
     # If less than two folds: using the same set as training and test set
     # (note this is not an accurate way to evaluate the performances!)
     if nfolds < 2:
@@ -827,4 +828,4 @@ def train_and_evaluate_task4(minFrequency, database, subsets, k):
 
 
 if __name__ == '__main__':
-    task1()
+    task4()
