@@ -353,24 +353,25 @@ def task1():
     firstLine = True
     result = ""
     # Printing frequent patterns along with their positive support:
-    for confidenceLevel in reversed(task.orderedListOfConfidenceValues):
-        for pattern, gid_subsets, confidence, frequency, _, _, _ in task.patterns:
-            if confidence == confidenceLevel:
-                toPrint = False
-                if confidence > task.minConfidence:
-                    toPrint = True
-                elif confidence == task.minConfidence:
-                    if frequency >= task.orderedListOfFrequencyValuesForMinConfidence[0]:
+    with open('./results/task1.txt', 'w') as dataset:
+        for confidenceLevel in reversed(task.orderedListOfConfidenceValues):
+            for pattern, gid_subsets, confidence, frequency, _, _, _ in task.patterns:
+                if confidence == confidenceLevel:
+                    toPrint = False
+                    if confidence > task.minConfidence:
                         toPrint = True
+                    elif confidence == task.minConfidence:
+                        if frequency >= task.orderedListOfFrequencyValuesForMinConfidence[0]:
+                            toPrint = True
 
-                if toPrint:
-                    if not firstLine:
-                        result += '\n'
-                    else:
-                        firstLine = False
-                    result += '{} {} {}'.format(pattern, confidence, frequency)
-        # print(result, file=file, end='')
-    print(result, end='')
+                    if toPrint:
+                        if not firstLine:
+                            result += '\n'
+                        else:
+                            firstLine = False
+                        result += '{} {} {}'.format(pattern, confidence, frequency)
+            # print(result, file=file, end='')
+        print(result, end='', file= dataset)
 
 
 def task2():
@@ -388,54 +389,54 @@ def task2():
     k = int(args[3])  # Third parameter: minimum support (note: this parameter will be k in case of top-k mining) 0
     minFrequency = int(args[4])
     nfolds = int(args[5])  # Fourth parameter: number of folds to use in the k-fold cross-validation.
+    with open('./results/task2.txt', 'w') as dataset:
+        if not os.path.exists(database_file_name_pos):
+            print('{} does not exist.'.format(database_file_name_pos))
+            sys.exit()
+        if not os.path.exists(database_file_name_neg):
+            print('{} does not exist.'.format(database_file_name_neg))
+            sys.exit()
 
-    if not os.path.exists(database_file_name_pos):
-        print('{} does not exist.'.format(database_file_name_pos))
-        sys.exit()
-    if not os.path.exists(database_file_name_neg):
-        print('{} does not exist.'.format(database_file_name_neg))
-        sys.exit()
+        graph_database = GraphDatabase()  # Graph database object
+        pos_ids = graph_database.read_graphs(
+            database_file_name_pos)  # Reading positive graphs, adding them to database and getting ids
+        neg_ids = graph_database.read_graphs(
+            database_file_name_neg)  # Reading negative graphs, adding them to database and getting ids
 
-    graph_database = GraphDatabase()  # Graph database object
-    pos_ids = graph_database.read_graphs(
-        database_file_name_pos)  # Reading positive graphs, adding them to database and getting ids
-    neg_ids = graph_database.read_graphs(
-        database_file_name_neg)  # Reading negative graphs, adding them to database and getting ids
-
-    # If less than two folds: using the same set as training and test set
-    # (note this is not an accurate way to evaluate the performances!)
-    if nfolds < 2:
-        subsets = [
-            pos_ids,  # Positive training set
-            pos_ids,  # Positive test set
-            neg_ids,  # Negative training set
-            neg_ids  # Negative test set
-        ]
-        # Printing fold number:
-        print('fold {}'.format(1))
-        train_and_evaluate(minFrequency, graph_database, subsets, k)
-
-    # Otherwise: performs k-fold cross-validation:
-    else:
-        pos_fold_size = len(pos_ids) // nfolds
-        neg_fold_size = len(neg_ids) // nfolds
-        for i in range(nfolds):
-            # Use fold as test set, the others as training set for each class;
-            # identify all the subsets to be maintained by the graph mining algorithm.
+        # If less than two folds: using the same set as training and test set
+        # (note this is not an accurate way to evaluate the performances!)
+        if nfolds < 2:
             subsets = [
-                numpy.concatenate((pos_ids[:i * pos_fold_size], pos_ids[(i + 1) * pos_fold_size:])),
-                # Positive training set
-                pos_ids[i * pos_fold_size:(i + 1) * pos_fold_size],  # Positive test set
-                numpy.concatenate((neg_ids[:i * neg_fold_size], neg_ids[(i + 1) * neg_fold_size:])),
-                # Negative training set
-                neg_ids[i * neg_fold_size:(i + 1) * neg_fold_size],  # Negative test set
+                pos_ids,  # Positive training set
+                pos_ids,  # Positive test set
+                neg_ids,  # Negative training set
+                neg_ids  # Negative test set
             ]
             # Printing fold number:
-            print('fold {}'.format(i + 1))
-            train_and_evaluate(minFrequency, graph_database, subsets, k)
+            print('fold {}'.format(1))
+            train_and_evaluate(minFrequency, graph_database, subsets, k, dataset)
+
+        # Otherwise: performs k-fold cross-validation:
+        else:
+            pos_fold_size = len(pos_ids) // nfolds
+            neg_fold_size = len(neg_ids) // nfolds
+            for i in range(nfolds):
+                # Use fold as test set, the others as training set for each class;
+                # identify all the subsets to be maintained by the graph mining algorithm.
+                subsets = [
+                    numpy.concatenate((pos_ids[:i * pos_fold_size], pos_ids[(i + 1) * pos_fold_size:])),
+                    # Positive training set
+                    pos_ids[i * pos_fold_size:(i + 1) * pos_fold_size],  # Positive test set
+                    numpy.concatenate((neg_ids[:i * neg_fold_size], neg_ids[(i + 1) * neg_fold_size:])),
+                    # Negative training set
+                    neg_ids[i * neg_fold_size:(i + 1) * neg_fold_size],  # Negative test set
+                ]
+                # Printing fold number:
+                print('fold {}'.format(i + 1), file= dataset)
+                train_and_evaluate(minFrequency, graph_database, subsets, k, dataset)
 
 
-def train_and_evaluate(minFrequency, database, subsets, k):
+def train_and_evaluate(minFrequency, database, subsets, k, dataset):
     task = K_MostConfidentAndFrequentPositiveSubGraphs(minFrequency, database, subsets, k, False)
 
     gSpan(task).run()  # Running gSpan
@@ -477,11 +478,11 @@ def train_and_evaluate(minFrequency, database, subsets, k):
                         firstLine = False
                     result += '{} {} {}'.format(pattern, confidence, frequency)
 
-    print(result)
+    print(result, file= dataset)
     # printing classification results:
-    print(predicted)
-    print('accuracy: {}'.format(accuracy))
-    print()  # Blank line to indicate end of fold.
+    print(predicted, file= dataset)
+    print('accuracy: {}'.format(accuracy), file= dataset)
+    print("",file= dataset)  # Blank line to indicate end of fold.
 
 
 def task3():
@@ -491,50 +492,51 @@ def task3():
     k = int(args[3])  # Third parameter: minimum support (note: this parameter will be k in case of top-k mining) 0
     minFrequency = int(args[4])
     nfolds = int(args[5])  # Fifth parameter: number of folds to use in the k-fold cross-validation.
-    if not os.path.exists(database_file_name_pos):
-        print('{} does not exist.'.format(database_file_name_pos))
-        sys.exit()
-    if not os.path.exists(database_file_name_neg):
-        print('{} does not exist.'.format(database_file_name_neg))
-        sys.exit()
+    with open('./results/task3.txt', 'w') as dataset:
+        if not os.path.exists(database_file_name_pos):
+            print('{} does not exist.'.format(database_file_name_pos))
+            sys.exit()
+        if not os.path.exists(database_file_name_neg):
+            print('{} does not exist.'.format(database_file_name_neg))
+            sys.exit()
 
-    graph_database = GraphDatabase()  # Graph database object
-    pos_ids = graph_database.read_graphs(
-        database_file_name_pos)  # Reading positive graphs, adding them to database and getting ids
-    neg_ids = graph_database.read_graphs(
-        database_file_name_neg)  # Reading negative graphs, adding them to database and getting ids
+        graph_database = GraphDatabase()  # Graph database object
+        pos_ids = graph_database.read_graphs(
+            database_file_name_pos)  # Reading positive graphs, adding them to database and getting ids
+        neg_ids = graph_database.read_graphs(
+            database_file_name_neg)  # Reading negative graphs, adding them to database and getting ids
 
-    # If less than two folds: using the same set as training and test set
-    # (note this is not an accurate way to evaluate the performances!)
-    if nfolds < 2:
-        subsets = [
-            pos_ids,  # Positive training set
-            pos_ids,  # Positive test set
-            neg_ids,  # Negative training set
-            neg_ids  # Negative test set
-        ]
-        # Printing fold number:
-        print('fold {}'.format(1))
-        train_and_evaluate(minFrequency, graph_database, subsets, k)
-
-    # Otherwise: performs k-fold cross-validation:
-    else:
-        pos_fold_size = len(pos_ids) // nfolds
-        neg_fold_size = len(neg_ids) // nfolds
-        for i in range(0, nfolds):
-            # Use fold as test set, the others as training set for each class;
-            # identify all the subsets to be maintained by the graph mining algorithm.
+        # If less than two folds: using the same set as training and test set
+        # (note this is not an accurate way to evaluate the performances!)
+        if nfolds < 2:
             subsets = [
-                numpy.concatenate((pos_ids[:i * pos_fold_size], pos_ids[(i + 1) * pos_fold_size:])),
-                # Positive training set
-                pos_ids[i * pos_fold_size:(i + 1) * pos_fold_size],  # Positive test set
-                numpy.concatenate((neg_ids[:i * neg_fold_size], neg_ids[(i + 1) * neg_fold_size:])),
-                # Negative training set
-                neg_ids[i * neg_fold_size:(i + 1) * neg_fold_size],  # Negative test set
+                pos_ids,  # Positive training set
+                pos_ids,  # Positive test set
+                neg_ids,  # Negative training set
+                neg_ids  # Negative test set
             ]
             # Printing fold number:
-            print('fold {}'.format(i + 1))
-            train_and_evaluate_task3(minFrequency, graph_database, subsets, k)
+            print('fold {}'.format(1), file=dataset)
+            train_and_evaluate(minFrequency, graph_database, subsets, k, dataset)
+
+        # Otherwise: performs k-fold cross-validation:
+        else:
+            pos_fold_size = len(pos_ids) // nfolds
+            neg_fold_size = len(neg_ids) // nfolds
+            for i in range(0, nfolds):
+                # Use fold as test set, the others as training set for each class;
+                # identify all the subsets to be maintained by the graph mining algorithm.
+                subsets = [
+                    numpy.concatenate((pos_ids[:i * pos_fold_size], pos_ids[(i + 1) * pos_fold_size:])),
+                    # Positive training set
+                    pos_ids[i * pos_fold_size:(i + 1) * pos_fold_size],  # Positive test set
+                    numpy.concatenate((neg_ids[:i * neg_fold_size], neg_ids[(i + 1) * neg_fold_size:])),
+                    # Negative training set
+                    neg_ids[i * neg_fold_size:(i + 1) * neg_fold_size],  # Negative test set
+                ]
+                # Printing fold number:
+                print('fold {}'.format(i + 1), file= dataset)
+                train_and_evaluate_task3(minFrequency, graph_database, subsets, k, dataset)
 
 
 def sortList(list):
@@ -554,7 +556,7 @@ def sortList(list):
     return result
 
 
-def train_and_evaluate_task3(minFrequency, database, subsets, k):
+def train_and_evaluate_task3(minFrequency, database, subsets, k, dataset):
     rules = []
     task = K_MostConfidentAndFrequentPositiveSubGraphs(minFrequency, database, subsets, 1, True)
     pos_ids = subsets[0]
@@ -656,69 +658,68 @@ def train_and_evaluate_task3(minFrequency, database, subsets, k):
             firstLine = False
         result += '{} {} {}'.format(pattern, confidence, frequency)
 
-    print(result)
+    print(result, file= dataset)
     # printing classification results:
-    print(predicted)
-    print('accuracy: {}'.format(accuracy))
-    print()  # Blank line to indicate end of fold.
+    print(predicted, file= dataset)
+    print('accuracy: {}'.format(accuracy), file= dataset)
+    print("", file= dataset)  # Blank line to indicate end of fold.
 
 
 def task4():
     args = sys.argv
     database_file_name_pos = args[1]  # First parameter: path to positive class file
     database_file_name_neg = args[2]  # Second parameter: path to negative class file
-    nfolds = int(args[3]) # Third parameter: number of folds to use in the k-fold cross-validation.
+    nfolds = int(args[5]) # Third parameter: number of folds to use in the k-fold cross-validation.
 
+    with open('./results/task4.txt', 'w') as dataset:
+        if not os.path.exists(database_file_name_pos):
+            print('{} does not exist.'.format(database_file_name_pos))
+            sys.exit()
+        if not os.path.exists(database_file_name_neg):
+            print('{} does not exist.'.format(database_file_name_neg))
+            sys.exit()
 
-
-    if not os.path.exists(database_file_name_pos):
-        print('{} does not exist.'.format(database_file_name_pos))
-        sys.exit()
-    if not os.path.exists(database_file_name_neg):
-        print('{} does not exist.'.format(database_file_name_neg))
-        sys.exit()
-
-    graph_database = GraphDatabase()  # Graph database object
-    pos_ids = graph_database.read_graphs(
-        database_file_name_pos)  # Reading positive graphs, adding them to database and getting ids
-    neg_ids = graph_database.read_graphs(
-        database_file_name_neg)  # Reading negative graphs, adding them to database and getting ids
-    minFrequency = (len(pos_ids) + len(neg_ids)) // 8
-    k = minFrequency
-    # If less than two folds: using the same set as training and test set
-    # (note this is not an accurate way to evaluate the performances!)
-    if nfolds < 2:
-        subsets = [
-            pos_ids,  # Positive training set
-            pos_ids,  # Positive test set
-            neg_ids,  # Negative training set
-            neg_ids  # Negative test set
-        ]
-        # Printing fold number:
-        print('fold {}'.format(1))
-        train_and_evaluate(minFrequency, graph_database, subsets, k)
-
-    # Otherwise: performs k-fold cross-validation:
-    else:
-        pos_fold_size = len(pos_ids) // nfolds
-        neg_fold_size = len(neg_ids) // nfolds
-        for i in range(0, nfolds):
-            # Use fold as test set, the others as training set for each class;
-            # identify all the subsets to be maintained by the graph mining algorithm.
+        graph_database = GraphDatabase()  # Graph database object
+        pos_ids = graph_database.read_graphs(
+            database_file_name_pos)  # Reading positive graphs, adding them to database and getting ids
+        neg_ids = graph_database.read_graphs(
+            database_file_name_neg)  # Reading negative graphs, adding them to database and getting ids
+        minFrequency = (len(pos_ids) + len(neg_ids)) // 8
+        k = minFrequency
+        # If less than two folds: using the same set as training and test set
+        # (note this is not an accurate way to evaluate the performances!)
+        if nfolds < 2:
             subsets = [
-                numpy.concatenate((pos_ids[:i * pos_fold_size], pos_ids[(i + 1) * pos_fold_size:])),
-                # Positive training set
-                pos_ids[i * pos_fold_size:(i + 1) * pos_fold_size],  # Positive test set
-                numpy.concatenate((neg_ids[:i * neg_fold_size], neg_ids[(i + 1) * neg_fold_size:])),
-                # Negative training set
-                neg_ids[i * neg_fold_size:(i + 1) * neg_fold_size],  # Negative test set
+                pos_ids,  # Positive training set
+                pos_ids,  # Positive test set
+                neg_ids,  # Negative training set
+                neg_ids  # Negative test set
             ]
             # Printing fold number:
-            print('fold {}'.format(i + 1))
-            train_and_evaluate_task4(minFrequency, graph_database, subsets, k)
+            print('fold {}'.format(1), file= dataset)
+            train_and_evaluate(minFrequency, graph_database, subsets, k)
+
+        # Otherwise: performs k-fold cross-validation:
+        else:
+            pos_fold_size = len(pos_ids) // nfolds
+            neg_fold_size = len(neg_ids) // nfolds
+            for i in range(0, nfolds):
+                # Use fold as test set, the others as training set for each class;
+                # identify all the subsets to be maintained by the graph mining algorithm.
+                subsets = [
+                    numpy.concatenate((pos_ids[:i * pos_fold_size], pos_ids[(i + 1) * pos_fold_size:])),
+                    # Positive training set
+                    pos_ids[i * pos_fold_size:(i + 1) * pos_fold_size],  # Positive test set
+                    numpy.concatenate((neg_ids[:i * neg_fold_size], neg_ids[(i + 1) * neg_fold_size:])),
+                    # Negative training set
+                    neg_ids[i * neg_fold_size:(i + 1) * neg_fold_size],  # Negative test set
+                ]
+                # Printing fold number:
+                print('fold {}'.format(i + 1), file= dataset)
+                train_and_evaluate_task4(minFrequency, graph_database, subsets, k, dataset)
 
 
-def train_and_evaluate_task4(minFrequency, database, subsets, k):
+def train_and_evaluate_task4(minFrequency, database, subsets, k, dataset):
     rules = []
     task = K_MostConfidentAndFrequentPositiveSubGraphs(minFrequency, database, subsets, 5, True, True)
     pos_ids = subsets[0]
@@ -820,12 +821,14 @@ def train_and_evaluate_task4(minFrequency, database, subsets, k):
             firstLine = False
         result += '{} {} {}'.format(pattern, confidence, frequency)
 
-    print(result)
+    print(result, file= dataset)
     # printing classification results:
-    print(predicted)
-    print('accuracy: {}'.format(accuracy))
-    print()  # Blank line to indicate end of fold.
+    print(predicted, file= dataset)
+    print('accuracy: {}'.format(accuracy), file= dataset)
+    print("", file= dataset)  # Blank line to indicate end of fold.
 
 
 if __name__ == '__main__':
+    task2()
+    task3()
     task4()
