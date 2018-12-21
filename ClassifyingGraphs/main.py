@@ -15,6 +15,8 @@ from sklearn import *
 from gspan_mining import gSpan
 from gspan_mining import GraphDatabase
 
+import time
+
 
 class PatternGraphs:
     """
@@ -369,7 +371,7 @@ def task1():
                             result += '\n'
                         else:
                             firstLine = False
-                        result += '{} {} {}'.format(pattern, confidence, frequency)
+                        result += '{}_{}_{}'.format(pattern, confidence, frequency)
             # print(result, file=file, end='')
         print(result, end='', file= dataset)
 
@@ -476,7 +478,7 @@ def train_and_evaluate(minFrequency, database, subsets, k, dataset):
                         result += '\n'
                     else:
                         firstLine = False
-                    result += '{} {} {}'.format(pattern, confidence, frequency)
+                    result += '{}_{}_{}'.format(pattern, confidence, frequency)
 
     print(result, file= dataset)
     # printing classification results:
@@ -656,7 +658,7 @@ def train_and_evaluate_task3(minFrequency, database, subsets, k, dataset):
             result += '\n'
         else:
             firstLine = False
-        result += '{} {} {}'.format(pattern, confidence, frequency)
+        result += '{}_{}_{}'.format(pattern, confidence, frequency)
 
     print(result, file= dataset)
     # printing classification results:
@@ -819,7 +821,7 @@ def train_and_evaluate_task4(minFrequency, database, subsets, k, dataset):
             result += '\n'
         else:
             firstLine = False
-        result += '{} {} {}'.format(pattern, confidence, frequency)
+        result += '{}_{}_{}'.format(pattern, confidence, frequency)
 
     print(result, file= dataset)
     # printing classification results:
@@ -829,6 +831,14 @@ def train_and_evaluate_task4(minFrequency, database, subsets, k, dataset):
 
 
 if __name__ == '__main__':
+
+
+    start_time = time.time()
     task2()
-    task3()
-    task4()
+    print("--- %s seconds ---" % (time.time() - start_time))
+    # start_time = time.time()
+    # task3()
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # start_time = time.time()
+    # task4()
+    # print("--- %s seconds ---" % (time.time() - start_time))
