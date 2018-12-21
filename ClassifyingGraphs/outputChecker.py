@@ -89,10 +89,11 @@ for fold in range(0, foldIndex+1):
     print("notFoundPatternsWithoutStatistics: " + str(notFoundPatternsWithoutStatistics))
 
     print("classificationMatches: " + str(classificationMatches))
-    print("numberOfTimesFirstTaskIsBetter: " + str(numberOfTimesFirstTaskIsBetter))
-    print("numberOfTimesSecondTaskIsBetter: " + str(numberOfTimesSecondTaskIsBetter))
-    print("numberOfTimesTasksAreEqual: " + str(numberOfTimesTasksAreEqual))
-    print()
+print()
+print("numberOfTimesFirstTaskIsBetter: " + str(numberOfTimesFirstTaskIsBetter))
+print("numberOfTimesSecondTaskIsBetter: " + str(numberOfTimesSecondTaskIsBetter))
+print("numberOfTimesTasksAreEqual: " + str(numberOfTimesTasksAreEqual))
+print()
 
 print("numberOfLines1: " + str(numberOfLines))
 print("numberOfLines2: " + str(numberOfLinesOurs))

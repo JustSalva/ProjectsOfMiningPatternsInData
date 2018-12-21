@@ -1,4 +1,4 @@
-\documentclass[10pt, a4paper]{article}
+\documentclass[11pt, a4paper]{article}
 
 \usepackage{geometry}
  \geometry{
@@ -88,7 +88,7 @@
 				\begin{itemize}
 					\item information gain evaluation metric;
 					\item our personal evaluation function: $f := n_c * N_c / n * N$ where $N_c$ is the cardinality of the class associated to the rule  in the selected data-set and where $N$ is the total number of transaction in the selected data-set 
-					\item laplace evaluation metric;
+					\item Laplace smoothing evaluation metric;
 				\end{itemize}
 				After several attempts, also using different types of patterns ties management, we have observed that the best performances were achieved with the Laplace metric. 
 				\item We have decided also to use as size of $topK$ a parametric value that depends on the size of the number of transactions, in particular the value is set to the 12,5 \% of the total number of transactions; notice that this is a maximum value and sometimes our implementation covers the entire training data-sets with a smaller number of rules.	
@@ -97,11 +97,38 @@
 
 
 	\section{Experimental comparison of the obtained results}
+		\subsection{Considerations about the results}
+		In order to perform the comparison of the three implemented algorithms we have implemented an elaborated script, able to analyze the results of the second, the third and the fourth tasks and to provide significative statistics, useful to help us to compare the results obtained; as stated in the first lines of this report all source files are available at our GitHub repository, and so the script (\textit{outputChecker.py}) is available in the main folder of this assignment. \newline
+		Our script outputs the following statistics (N.B. it compares two algorithms' results with same input parameters):
+		\begin{itemize}
+			\item \textit{fold}: the fold number, used since we compare the results of the same fold between the two algorithms;
+			\item \textit{number of matches with measures}: that means the number of equal patterns that were considered by both algorithms, this statistic requires that also the printed frequency and accuracy are equal;
+			\item \textit{number of matches without measures}: that means the number of equal patterns that were considered by both algorithms, this statistic does not require that also the printed frequency and accuracy are equal, this statistic is considered since not all algorithms compute them in the same way (see implementation's description);
+			\item \textit{classificationMatches}: number of test set elements that are classified in the same way by the two algorithms (N.B. not necessarily correct matches, just identical ones);
+			\item \textit{numberOfTimesFirstTaskIsBetter}: the number of times the first algorithm outperforms the second;
+			\item \textit{numberOfTimesSecondTaskIsBetter}: the number of times the second algorithm outperforms the first;
+			\item \textit{numberOfTimesTasksAreEqual}: the number of times the two algorithms yeld the same performances.
+		\end{itemize}
+		All the considerations below have been made after a comparison of the results of the second, the third and the fourth tasks, with different parameters. \newline
+		Through the comparison between our \textbf{ basic model} and the other two algorithms we've noticed that, even though in a few cases the classification accuracy was the same, the basic model is always outperformed by the other two algorithms.
+		The basic model uses in input all found patterns (in the relative fold) and obviously almost all those patterns are also considered by the other two algorithms since this first task simply use the first \textit{topk} ones. The basic model classifies the validation sets in a very different manner w.r.t. the other two algorithms since, in average, it classifies more or less half of the validation examples with the same class as the other two algorithms, we noticed that most of these differences in classification results cause the lower performances of this first algorithm.
+		\newline
+		Let's now compare the \textbf{sequential covering classifier} and \textbf{our classifier}:
+		both models yeld very similar accuracy performances, but in some cases the third algorithm outperforms the second since, as explained in the implementation section, we've introduced the Laplace smoothing measure instead of the confidence measure and so the resulting estimate will be between the empirical probability $ \frac {x_i}{N}$ and the uniform probability $ \frac {1}{d}$;  this kind of estimator is called \textit{shrinkage estimator}.
+		From a Bayesian point of view this is equivalent to using a Beta distribution as the conjugate prior for the parameters of Binomial distribution.
+		Obviously the number of patterns that matches and has same statistics is always zero since we have changed how they are computed, but the number of patterns that matches and has different statistics is always greater than half of the patterns, but they never all match, especially the last selected patterns, since in those patterns the differences between confidence and Laplace smoothing are more significant. This kind of behavior is obviously reflected also on the classification of validation examples: when the performances of the two models are the same, all the examples are classified with the same class by the two algorithms, but when our classifier outperforms the other one we noticed that some of the patterns that were classified wrongly by the sequential covering classifier are classified correctly by our algorithm. The main advantage of our approach is revealed when the last selected rules are used to classify the examples.
+		We have also noticed that the number of patterns selected as rules by our classifier is always smaller w.r.t the sequential covering classifier; this can be explained by the fact that the Laplace smoothing measure is a shrinkage measure and so it tends to compress information.
+
+	\subsection{Considerations about the performances}
+		We have noticed that the first algorithm (\textit{basic model}) is the faster one, but at the same time it is also the less accurate. The second algorithm (\textit{Sequential covering}) spends, on average, double the time w.r.t. the first one, but yields way better accuracy. Both algorithms have a decreasing execution time when the minFrequency parameter increases.
+		Our classifier, since it adapts the parameters (\textit{minFrequency} and \textit{topK}) w.r.t. the size of the training set (see implementation's description), spends a nearly constant execution time to perform the training on each example, but the accuracy of the obtained model is slightly better than the \textit{Sequential covering} algorithm.
+		To corroborate our considerations we present here a graph were we show some significative examples, that have been obtained by running the algorithm on the small dataset.
+
 	
 	
 	\section{Notes}
-	The biggest difficulty that we have encountered was that we have used Java in the other projects and not Python so we have had to adapt our solution of the previous project in another programming language. In addition, using a new library is always difficult because you have to spend time to understand the structures used, the methods already implemented and how to use them.
-	We have wasted time to understand some pieces of the template provided because of the lack of comments in the code and in the second task, at the beginning, it was not clear which classifier to use: we tried with different classifiers, but each time we didn't obtain the same results of the example provided. Only after the clarifications of the assistant we have found the correct one with the correct parameters.
+	The biggest difficulty that we have encountered was that we have used Java in the other projects and not Python so we have had to adapt our solution of the previous project in another programming language. In addition, using a new library is always difficult because you have to spend time to understand the structures used, the methods already implemented and how to use them. \newline
+	We have wasted time to understand some pieces of the template provided because of the lack of comments in the code and in the second task, at the beginning, it was not clear which classifier to use: we tried with different classifiers, but each time we didn't obtain the same results of the example provided. \newline Only after the clarifications of the assistant we have found the correct one with the correct parameters. \newline
 	The last issue that we have had to manage it was the general structure of the templates: having only lists we had to scan them each time and it was difficult to understand the structure used and so how to obtain the right fields. It took much time, we would have preferred to work with objects.    
 		
 
